@@ -1,12 +1,17 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ApiTestCreditCardTransaction } from './commons/decorators/test-credit-card-complete-flow.decorator';
+import { TestCreditCardFlowCreditCardTransactionDto } from './commons/dto/test-credit-card-complete-flow.dto';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Post('run-credit-card-wompi-flow')
+  @ApiTestCreditCardTransaction()
+  async testingCreditCardWompiFlow(
+    @Body() body: TestCreditCardFlowCreditCardTransactionDto,
+  ) {
+    return this.appService.testCreditCardWompiFlow(body);
   }
 }
