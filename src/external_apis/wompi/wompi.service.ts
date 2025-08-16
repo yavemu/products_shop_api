@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import * as crypto from 'crypto';
 
-import { WompiConfig } from 'src/config';
+import { IWompiConfig } from 'src/config';
 import { GetTransactionInfoResponse } from './interfaces/get-transaction-by-id.interface';
 import {
   CreateCreditCardTransactionRequest,
@@ -22,13 +22,13 @@ export class WompiService {
   private readonly publicKey: string;
   private readonly privateKey: string;
   private readonly integrityKey: string;
-  private readonly endpointsV1: WompiConfig['endpoints']['v1'];
+  private readonly endpointsV1: IWompiConfig['endpoints']['v1'];
 
   constructor(
     private readonly http: HttpService,
     private readonly config: ConfigService,
   ) {
-    const wompiConfig = this.config.get('wompi_config') as WompiConfig;
+    const wompiConfig = this.config.getOrThrow<IWompiConfig>('wompi_config');
 
     this.publicKey = wompiConfig.publicKey;
     this.privateKey = wompiConfig.privateKey;

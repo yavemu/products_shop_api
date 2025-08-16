@@ -1,16 +1,16 @@
-export interface WompiEndpointsV1 {
+export interface IWompiEndpointsV1 {
   getMerchantInfo: (publicKey: string) => string;
   createTokenizeCard: string;
   createTransactions: string;
   getTransactionInfo: (transactionId: string) => string;
 }
 
-export interface WompiConfig {
+export interface IWompiConfig {
   url: string;
   publicKey: string;
   privateKey: string;
   integrityKey: string;
   endpoints: {
-    v1: WompiEndpointsV1;
+    v1: IWompiEndpointsV1;
   };
 }

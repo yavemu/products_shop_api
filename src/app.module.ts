@@ -1,14 +1,34 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { WompiModule } from './external_apis/wompi/wompi.module';
-import externalApisConfig from './config/wompi/wompi.config';
+import { databaseConfig, wompiConfig } from './config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProductModule } from './infrastructure/modules/product.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [externalApisConfig] }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [wompiConfig, databaseConfig],
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.getOrThrow<string>('database.host'),
+        port: configService.getOrThrow<number>('database.port'),
+        username: configService.getOrThrow<string>('database.username'),
+        password: configService.getOrThrow<string>('database.password'),
+        database: configService.getOrThrow<string>('database.name'),
+        autoLoadEntities: true,
+        synchronize: configService.getOrThrow<boolean>('database.synchronize'),
+      }),
+    }),
+
     WompiModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
