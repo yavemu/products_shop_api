@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { WompiService } from './external_apis/wompi/wompi.service';
+import { TestCreditCardFlowCreditCardTransactionDto } from './commons/dto/test-credit-card-complete-flow.dto';
+import { WompiService } from './infrastructure/external_apis/wompi/wompi.service';
 import {
   CreateCreditCardTransactionInput,
   TokenizeCreditCardData,
-} from './external_apis/wompi/interfaces';
-import { TestCreditCardFlowCreditCardTransactionDto } from './commons/dto/test-credit-card-complete-flow.dto';
+} from './infrastructure/external_apis/wompi/interfaces';
 
 @Injectable()
 export class AppService {
@@ -44,7 +44,7 @@ export class AppService {
       const transaction =
         await this.wompiService.createCreditCardTransaction(transactionInput);
 
-      // // 3. Obtener información de la transacción
+      // 4. Obtener información de la transacción
       const transactionInfo = await this.wompiService.getTransactionInfo(
         transaction.id,
       );
@@ -54,9 +54,5 @@ export class AppService {
       this.logger.error('Error en testWompiFlow', error);
       throw error;
     }
-  }
-
-  async getMerchatInfo() {
-    return this.wompiService.getMerchantInfo();
   }
 }

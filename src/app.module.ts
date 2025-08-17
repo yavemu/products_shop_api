@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { WompiModule } from './external_apis/wompi/wompi.module';
 import { databaseConfig, wompiConfig } from './config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from './infrastructure/modules/product.module';
 import { OrderModule } from './infrastructure/modules/order.module';
 import { TransactionModule } from './infrastructure/modules/transaction.module';
+import { WompiModule } from './infrastructure/external_apis/wompi/wompi.module';
 
 @Module({
   imports: [

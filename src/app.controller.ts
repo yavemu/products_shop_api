@@ -13,5 +13,7 @@ export class AppController {
     @Body() body: TestCreditCardFlowCreditCardTransactionDto,
   ) {
     return this.appService.testCreditCardWompiFlow(body);
+
+    return null;
   }
 }

@@ -129,7 +129,6 @@ export class WompiService {
     transactionId: string,
   ): Promise<GetTransactionInfoResponse> {
     const url = this.endpointsV1.getTransactionInfo(transactionId);
-    this.logger.log('Fetching transaction info:', url);
 
     try {
       const response = await firstValueFrom(
