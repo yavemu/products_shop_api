@@ -6,6 +6,8 @@ import { WompiModule } from './external_apis/wompi/wompi.module';
 import { databaseConfig, wompiConfig } from './config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from './infrastructure/modules/product.module';
+import { OrderModule } from './infrastructure/modules/order.module';
+import { TransactionModule } from './infrastructure/modules/transaction.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { ProductModule } from './infrastructure/modules/product.module';
 
     WompiModule,
     ProductModule,
+    OrderModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

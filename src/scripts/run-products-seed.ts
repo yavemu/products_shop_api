@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
-import { SeedProductsUseCase } from '../application/products/use-cases/seed-products.usecase';
+import { SeedProductsUseCase } from '../core/application/products/use-cases/seed-products.usecase';
 import * as productsData from '../seeds/products.seed.json';
 
 async function runProductSeed() {

@@ -6,17 +6,17 @@ import type { ProductRepositoryPort } from '../../../domain/products/ports/produ
 export class SeedProductsUseCase {
   constructor(
     @Inject(PRODUCT_REPOSITORY)
-    private readonly productRepository: ProductRepositoryPort,
+    private readonly repository: ProductRepositoryPort,
   ) {}
 
   async execute(productsData: any): Promise<void> {
-    const existingCount = await this.productRepository.count();
+    const existingCount = await this.repository.count();
     if (existingCount > 0) {
       throw new Error('Products already exist in database');
     }
 
     for (const productData of productsData) {
-      await this.productRepository.save(productData);
+      await this.repository.save(productData);
     }
   }
 }

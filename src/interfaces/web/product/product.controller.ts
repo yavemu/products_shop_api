@@ -2,7 +2,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 import {
   GetProductByIdUseCase,
   GetProductsUseCase,
-} from '../../application/products/use-cases';
+} from '../../../core/application/products/use-cases';
 
 @Controller('products')
 export class ProductController {

@@ -4,13 +4,13 @@ import { PRODUCT_REPOSITORY } from '../../../domain/products/ports/product-repos
 import type { ProductRepositoryPort } from '../../../domain/products/ports/product-repository.port';
 
 @Injectable()
-export class CreateProductUseCase {
+export class GetProductsUseCase {
   constructor(
     @Inject(PRODUCT_REPOSITORY)
-    private readonly productRepository: ProductRepositoryPort,
+    private readonly repository: ProductRepositoryPort,
   ) {}
 
-  async execute(data: Product): Promise<Product> {
-    return this.productRepository.save(data);
+  async execute(): Promise<Product[]> {
+    return this.repository.findAll();
   }
 }

@@ -1,5 +1,3 @@
-// get-merchant.interface.ts
-
 export interface MerchantResponse {
   data: MerchantData;
   [k: string]: any;

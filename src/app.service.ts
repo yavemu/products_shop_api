@@ -55,4 +55,8 @@ export class AppService {
       throw error;
     }
   }
+
+  async getMerchatInfo() {
+    return this.wompiService.getMerchantInfo();
+  }
 }
