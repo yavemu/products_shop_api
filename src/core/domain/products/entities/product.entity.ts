@@ -9,6 +9,8 @@ import {
 } from 'class-validator';
 
 export class Product {
+  id: number;
+
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)

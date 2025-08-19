@@ -1,28 +1,42 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { OrderController } from '../../interfaces/web/order/order.controller';
 import { OrderOrmEntity } from '../database/entities/order.orm-entity';
+
+import { ProductOrmEntity } from '../database/entities/product.orm-entity';
 import { OrderRepositoryAdapter } from '../database/repositories/order.repository.adapter';
+import { OrderDetailRepositoryAdapter } from '../database/repositories/order-detail.repository.adapter';
+import { ProductRepositoryAdapter } from '../database/repositories/product.repository.adapter';
 import { ORDER_REPOSITORY } from '../../core/domain/orders/ports/order-repository.port';
+import { ORDER_DETAIL_REPOSITORY } from '../../core/domain/orders/ports/order-detail-repository.port';
+import { PRODUCT_REPOSITORY } from '../../core/domain/products/ports/product-repository.port';
 import {
   CreateOrderUseCase,
   GetOrderByIdUseCase,
   GetOrdersUseCase,
 } from '../../core/application/orders/use-cases';
-import { OrderController } from '../../interfaces/web/order/order.controller';
+import { OrderDetailOrmEntity } from '../database/entities/order-detail.orm.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([OrderOrmEntity])],
-  exports: [],
+  imports: [
+    TypeOrmModule.forFeature([
+      OrderOrmEntity,
+      OrderDetailOrmEntity,
+      ProductOrmEntity,
+    ]),
+  ],
   controllers: [OrderController],
   providers: [
-    OrderRepositoryAdapter,
+    { provide: ORDER_REPOSITORY, useClass: OrderRepositoryAdapter },
+    {
+      provide: ORDER_DETAIL_REPOSITORY,
+      useClass: OrderDetailRepositoryAdapter,
+    },
+    { provide: PRODUCT_REPOSITORY, useClass: ProductRepositoryAdapter },
     CreateOrderUseCase,
     GetOrderByIdUseCase,
     GetOrdersUseCase,
-    {
-      provide: ORDER_REPOSITORY,
-      useExisting: OrderRepositoryAdapter,
-    },
   ],
+  exports: [ORDER_REPOSITORY, ORDER_DETAIL_REPOSITORY],
 })
 export class OrderModule {}

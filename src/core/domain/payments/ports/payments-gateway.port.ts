@@ -1,4 +1,4 @@
-import { GetTransactionInfoResponse } from 'src/infrastructure/external_apis/wompi/interfaces/get-transaction-by-id.interface';
+import { GetTransactionInfoResponse } from '../../../../infrastructure/external_apis/wompi/interfaces/get-transaction-by-id.interface';
 import {
   CreateCreditCardTransactionInput,
   CreateTokenizeCreditCardInput,

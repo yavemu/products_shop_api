@@ -8,6 +8,7 @@ import { ProductModule } from './infrastructure/modules/product.module';
 import { OrderModule } from './infrastructure/modules/order.module';
 import { TransactionModule } from './infrastructure/modules/transaction.module';
 import { WompiModule } from './infrastructure/external_apis/wompi/wompi.module';
+import { OrderDetailOrmEntity } from './infrastructure/database/entities/order-detail.orm.entity';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { WompiModule } from './infrastructure/external_apis/wompi/wompi.module';
     WompiModule,
     ProductModule,
     OrderModule,
+    OrderDetailOrmEntity,
     TransactionModule,
   ],
   controllers: [AppController],

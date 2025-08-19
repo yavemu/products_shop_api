@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import * as crypto from 'crypto';
 
-import { IWompiConfig } from 'src/config';
+import { IWompiConfig } from '../../../config';
 import { GetTransactionInfoResponse } from './interfaces/get-transaction-by-id.interface';
 import {
   CreateCreditCardTransactionRequest,

@@ -1,4 +1,4 @@
-import { PaymentGateway } from 'src/core/domain/payments/ports/payments-gateway.port';
+import { PaymentGateway } from '../../../core/domain/payments/ports/payments-gateway.port';
 import { WompiService } from './wompi.service';
 import {
   CreateCreditCardTransactionInput,

@@ -5,24 +5,29 @@ export class ProductOrmEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 100 })
+  @Column({ name: 'name', type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ length: 50 })
+  @Column({ name: 'brand', type: 'varchar', length: 50 })
   brand: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ name: 'description', type: 'varchar', length: 255, nullable: true })
   description: string;
 
-  @Column({ type: 'int' })
+  @Column({ name: 'stock', type: 'int' })
   stock: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ name: 'price', type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
-  @Column()
+  @Column({ name: 'main_image', type: 'varchar', length: 255, nullable: false })
   mainImage: string;
 
-  @Column({ nullable: true })
+  @Column({
+    name: 'thumbnail_image',
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
   thumbnail: string;
 }
