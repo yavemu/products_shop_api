@@ -3,6 +3,10 @@ import {
   GetProductByIdUseCase,
   GetProductsUseCase,
 } from '../../../core/application/products/use-cases';
+import {
+  FindAllProductsSwaggerDecorator,
+  GetProductByIdSwaggerDecorator,
+} from '../../../commons/decorators';
 
 @Controller('products')
 export class ProductController {
@@ -12,11 +16,13 @@ export class ProductController {
   ) {}
 
   @Get()
+  @FindAllProductsSwaggerDecorator()
   async getAll() {
     return this.getProducts.execute();
   }
 
   @Get('id')
+  @GetProductByIdSwaggerDecorator()
   async getById(@Param('id') id: number) {
     return this.getProductById.execute(id);
   }

@@ -1,4 +1,4 @@
-import { IProductFilter } from 'src/core/application/products/use-cases/interfaces/product-filder.interface';
+import { IProductFilter } from '../../../../core/application/products/use-cases/interfaces/product-filder.interface';
 import { Product } from '../entities/product.entity';
 
 export const PRODUCT_REPOSITORY = 'PRODUCT_REPOSITORY';

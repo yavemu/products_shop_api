@@ -7,8 +7,10 @@ module.exports = {
   },
   collectCoverageFrom: [
     '**/*.(t|j)s',
+    '!**/commons/dto/test-credit-card-complete-flow.dto.ts',
     '!**/main.(t|j)s',
     '!**/*.config.(t|j)s',
+    '!**/config/**',
     '!**/seed/**',
     '!**/scripts/**',
     '!**/dist/**',
