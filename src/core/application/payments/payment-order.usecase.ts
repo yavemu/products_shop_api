@@ -50,20 +50,21 @@ export class PayOrderUseCase {
     order.status = OrderStatusEnum.PROCCESING_PAY;
     order.deliveryAmount = input.deliveryAmount;
     order.deliveryName = input.deliveryName;
-    await this.updateOrder(order);
 
     // 2) Crear transacción PENDING
     const transactionData = new Transaction();
     transactionData.orderId = orderId;
     transactionData.status = OrderStatusEnum.PENDING;
-    const transaction = await this.updateTransaction(transactionData);
+    const { order: orderUpdated, transaction: transactionUpdated } =
+      await this.updateOrderTransaction(order, transactionData);
 
     // 3) Ejecutar flujo de pasarela con el proveedor
     const paymentDataInput: ICreatePayWithCreditCardTransactionInput = {
-      amount_in_cents: Number(order.totalAmount) + Number(order.deliveryAmount),
+      amount_in_cents:
+        Number(orderUpdated.totalAmount) + Number(orderUpdated.deliveryAmount),
       currency: 'COP',
-      customer_email: order.customerEmail,
-      reference: `${order.id}_${Date.now()}`,
+      customer_email: orderUpdated.customerEmail,
+      reference: `${orderUpdated.id}_${Date.now()}`,
       card_number: input.cardNumber,
       exp_month: input.expMonth,
       exp_year: input.expYear,
@@ -76,7 +77,7 @@ export class PayOrderUseCase {
 
     // 4) Actualizar datos de la transacción
     const transactionUpdatedResult = this.getPaymentDataToPersistInTransaction(
-      transaction,
+      transactionUpdated,
       paymentProviderResponse,
     );
 
@@ -85,18 +86,18 @@ export class PayOrderUseCase {
       transactionUpdatedResult,
     );
 
-    // 6) Consultar polling de la transacción para obtener respuesta final
+    // 6) Consultar polling de la transacción para obtener respuesta final y actualizar la orden y transacción
     const pollingTransactionResult =
       await this.pollingTransaction(updatedTransaction);
 
-    const savedPollingTransaction = await this.updateTransaction(
+    orderUpdated.status = pollingTransactionResult.status as OrderStatusEnum;
+
+    const result = await this.updateOrderTransaction(
+      orderUpdated,
       pollingTransactionResult,
     );
 
-    order.status = savedPollingTransaction.status as OrderStatusEnum;
-    await this.updateOrder(order);
-
-    return savedPollingTransaction;
+    return result.transaction;
   }
   private async doPayWithCreditCardWompiFlow(
     input: ICreatePayWithCreditCardTransactionInput,
@@ -184,10 +185,34 @@ export class PayOrderUseCase {
   ): Promise<Transaction> {
     return await this.transactionRepository.save(transaction);
   }
+  private async updateOrderTransaction(
+    order: Order,
+    transaction: Transaction,
+  ): Promise<{ order: Order; transaction: Transaction }> {
+    if (!order.transactions) {
+      order.transactions = [];
+    }
 
-  private async updateOrder(order: Order): Promise<Order> {
-    console.log('====order', order);
+    let updatedTransaction: Transaction;
 
-    return await this.orderRepository.save(order);
+    if (transaction.id) {
+      const existingTransactionIndex = order.transactions.findIndex(
+        (t) => t.id === transaction.id,
+      );
+
+      if (existingTransactionIndex !== -1) {
+        order.transactions[existingTransactionIndex] = transaction;
+        updatedTransaction = transaction;
+      } else {
+        updatedTransaction = await this.transactionRepository.save(transaction);
+        order.transactions.push(updatedTransaction);
+      }
+    } else {
+      updatedTransaction = await this.transactionRepository.save(transaction);
+      order.transactions.push(updatedTransaction);
+    }
+
+    const savedOrder = await this.orderRepository.save(order);
+    return { order: savedOrder, transaction: updatedTransaction };
   }
 }

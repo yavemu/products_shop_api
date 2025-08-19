@@ -12,6 +12,7 @@ import {
 import { Type } from 'class-transformer';
 import { OrderDetail } from './order-detail.entity';
 import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm-entity';
+import { Transaction } from '../../transactions/entities/transaction.entity';
 
 export class Order {
   id?: number;
@@ -59,4 +60,10 @@ export class Order {
   @ValidateNested({ each: true })
   @Type(() => OrderDetail)
   orderDetails: OrderDetail[];
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => Transaction)
+  transactions?: Transaction[];
 }
