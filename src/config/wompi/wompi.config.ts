@@ -11,7 +11,7 @@ export default registerAs('wompi_config', () => ({
         `${process.env.WOMPI_API_URL}/v1/merchants/${publicKey}`,
       createTokenizeCard: `${process.env.WOMPI_API_URL}/v1/tokens/cards`,
       createTransactions: `${process.env.WOMPI_API_URL}/v1/transactions`,
-      getTransactionInfo: (transactionId: string) =>
+      getTransactionInfoById: (transactionId: string) =>
         `${process.env.WOMPI_API_URL}/v1/transactions/${transactionId}`,
     },
   },

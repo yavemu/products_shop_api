@@ -1,30 +1,25 @@
-export interface GetTransactionInfoResponse {
-  data: TransactionData;
-  [k: string]: any; // ignore other properties like meta: Record<string, any>
-}
-
-export interface TransactionData {
+export interface GetTransactionInfoByIdResponse {
   id: string;
   created_at: string;
   amount_in_cents: number;
   reference: string;
   currency: string;
   payment_method_type: string;
-  payment_method: PaymentMethod;
+  payment_method: GetTransactionInfoByIdPaymentMethod;
   redirect_url: string | null;
   status: string;
   status_message: string;
-  merchant: Merchant;
-  taxes: Tax[];
+  merchant: GetTransactionInfoByIdMerchant;
+  taxes: GetTransactionInfoByIdTax[];
 }
 
-export interface PaymentMethod {
+export interface GetTransactionInfoByIdPaymentMethod {
   type: string;
-  extra: PaymentMethodExtra;
+  extra: GetTransactionInfoByIdPaymentMethodExtra;
   installments: number;
 }
 
-export interface PaymentMethodExtra {
+export interface GetTransactionInfoByIdPaymentMethodExtra {
   name: string;
   brand: string;
   last_four: string;
@@ -32,7 +27,7 @@ export interface PaymentMethodExtra {
   [k: string]: any;
 }
 
-export interface Merchant {
+export interface GetTransactionInfoByIdMerchant {
   name: string;
   legal_name: string;
   contact_name: string;
@@ -43,7 +38,7 @@ export interface Merchant {
   legal_id: string;
 }
 
-export interface Tax {
+export interface GetTransactionInfoByIdTax {
   name?: string;
   amount_in_cents?: number;
 }

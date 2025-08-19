@@ -45,7 +45,7 @@ export class AppService {
         await this.wompiService.createCreditCardTransaction(transactionInput);
 
       // 4. Obtener información de la transacción
-      const transactionInfo = await this.wompiService.getTransactionInfo(
+      const transactionInfo = await this.wompiService.getTransactionInfoById(
         transaction.id,
       );
 

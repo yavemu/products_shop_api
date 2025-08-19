@@ -2,7 +2,7 @@ export interface IWompiEndpointsV1 {
   getMerchantInfo: (publicKey: string) => string;
   createTokenizeCard: string;
   createTransactions: string;
-  getTransactionInfo: (transactionId: string) => string;
+  getTransactionInfoById: (transactionId: string) => string;
 }
 
 export interface IWompiConfig {

@@ -5,7 +5,6 @@ import { firstValueFrom } from 'rxjs';
 import * as crypto from 'crypto';
 
 import { IWompiConfig } from '../../../config';
-import { GetTransactionInfoResponse } from './interfaces/get-transaction-by-id.interface';
 import {
   CreateCreditCardTransactionRequest,
   CreateTokenizeCreditCardInput,
@@ -13,6 +12,7 @@ import {
   CreateTransactionResponseData,
   MerchantData,
   TokenizeCreditCardData,
+  GetTransactionInfoByIdResponse,
 } from './interfaces';
 
 @Injectable()
@@ -34,10 +34,6 @@ export class WompiService {
     this.privateKey = wompiConfig.privateKey;
     this.integrityKey = wompiConfig.integrityKey;
     this.endpointsV1 = wompiConfig.endpoints.v1;
-
-    if (!this.publicKey || !this.privateKey || !this.integrityKey) {
-      this.logger.warn('[WompiService] Configuración incompleta.');
-    }
   }
 
   async getMerchantInfo(): Promise<MerchantData> {
@@ -125,10 +121,10 @@ export class WompiService {
     }
   }
 
-  async getTransactionInfo(
+  async getTransactionInfoById(
     transactionId: string,
-  ): Promise<GetTransactionInfoResponse> {
-    const url = this.endpointsV1.getTransactionInfo(transactionId);
+  ): Promise<GetTransactionInfoByIdResponse> {
+    const url = this.endpointsV1.getTransactionInfoById(transactionId);
 
     try {
       const response = await firstValueFrom(
@@ -136,7 +132,7 @@ export class WompiService {
           headers: { Authorization: `Bearer ${this.publicKey}` },
         }),
       );
-      return response.data?.data as GetTransactionInfoResponse;
+      return response.data?.data as GetTransactionInfoByIdResponse;
     } catch (err: any) {
       throw new HttpException(
         {

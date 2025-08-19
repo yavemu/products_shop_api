@@ -1,4 +1,4 @@
-import { GetTransactionInfoResponse } from '../../../../infrastructure/external_apis/wompi/interfaces/get-transaction-by-id.interface';
+import { GetTransactionInfoByIdResponse } from '../../../../infrastructure/external_apis/wompi/interfaces/get-transaction-by-id.interface';
 import {
   CreateCreditCardTransactionInput,
   CreateTokenizeCreditCardInput,
@@ -15,5 +15,7 @@ export interface PaymentGateway {
   createCreditCardTransaction(
     input: CreateCreditCardTransactionInput,
   ): Promise<CreateTransactionResponseData>;
-  getTransaction(transactionId: string): Promise<GetTransactionInfoResponse>;
+  getTransaction(
+    transactionId: string,
+  ): Promise<GetTransactionInfoByIdResponse>;
 }
