@@ -7,7 +7,7 @@ import {
   TokenizeCreditCardData,
 } from '../../../../infrastructure/external_apis/wompi/interfaces';
 
-export interface PaymentGateway {
+export interface WompiPaymentGatewayPort {
   getMerchantInfo(): Promise<MerchantData>;
   createTokenizeCreditCard(
     input: CreateTokenizeCreditCardInput,

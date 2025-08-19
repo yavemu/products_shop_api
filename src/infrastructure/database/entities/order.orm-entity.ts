@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { OrderDetailOrmEntity } from './order-detail.orm.entity';
+import { TransactionOrmEntity } from './transaction.orm-entity';
 
 export enum OrderStatusEnum {
   PREORDENED = 'preordered',
@@ -76,4 +77,10 @@ export class OrderOrmEntity {
     eager: true,
   })
   orderDetails: OrderDetailOrmEntity[];
+
+  @OneToMany(() => TransactionOrmEntity, (trans) => trans.order, {
+    cascade: true,
+    eager: true,
+  })
+  transactions: TransactionOrmEntity[];
 }

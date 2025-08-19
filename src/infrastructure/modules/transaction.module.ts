@@ -10,7 +10,6 @@ import {
 
 @Module({
   imports: [TypeOrmModule.forFeature([TransactionOrmEntity])],
-  exports: [],
   controllers: [],
   providers: [
     TransactionRepositoryAdapter,
@@ -20,6 +19,14 @@ import {
       provide: TRANSACTION_REPOSITORY,
       useExisting: TransactionRepositoryAdapter,
     },
+  ],
+  exports: [
+    CreateTransactionUseCase,
+    {
+      provide: TRANSACTION_REPOSITORY,
+      useExisting: TransactionRepositoryAdapter,
+    },
+    TypeOrmModule,
   ],
 })
 export class TransactionModule {}

@@ -12,7 +12,7 @@ export class TransactionRepositoryAdapter implements TransactionRepositoryPort {
     private readonly repository: Repository<TransactionOrmEntity>,
   ) {}
 
-  async save(transaction: Transaction): Promise<Transaction> {
+  async save(transaction: Partial<Transaction>): Promise<Transaction> {
     const entity = this.repository.create(transaction);
     const saved = await this.repository.save(entity);
     return saved;

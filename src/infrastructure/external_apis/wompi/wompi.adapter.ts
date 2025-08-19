@@ -1,4 +1,4 @@
-import { PaymentGateway } from '../../../core/domain/payments/ports/payments-gateway.port';
+import { WompiPaymentGatewayPort } from '../../../core/domain/payments/ports/wompi-payments-gateway.port';
 import { WompiService } from './wompi.service';
 import {
   CreateCreditCardTransactionInput,
@@ -9,7 +9,7 @@ import {
 } from './interfaces';
 import { GetTransactionInfoByIdResponse } from './interfaces/get-transaction-by-id.interface';
 
-export class WompiAdapter implements PaymentGateway {
+export class WompiAdapter implements WompiPaymentGatewayPort {
   constructor(private readonly service: WompiService) {}
 
   async getMerchantInfo(): Promise<MerchantData> {

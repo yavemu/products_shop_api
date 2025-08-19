@@ -7,6 +7,7 @@ import {
   IsEnum,
   IsArray,
   ValidateNested,
+  IsDate,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { OrderDetail } from './order-detail.entity';
@@ -35,7 +36,14 @@ export class Order {
   @IsEnum(OrderStatusEnum)
   status: OrderStatusEnum;
 
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
   createdAt?: Date;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
   updatedAt?: Date;
 
   @IsArray()

@@ -1,4 +1,12 @@
-import { IsInt, IsPositive, Min, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsInt,
+  IsPositive,
+  Min,
+  IsNumber,
+  IsOptional,
+  IsDate,
+} from 'class-validator';
 
 export class OrderDetail {
   id?: number;
@@ -22,4 +30,14 @@ export class OrderDetail {
   @IsInt()
   @Min(1)
   productId: number;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  createdAt?: Date;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  updatedAt?: Date;
 }

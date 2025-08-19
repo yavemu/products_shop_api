@@ -13,6 +13,8 @@ import {
   MerchantData,
   TokenizeCreditCardData,
   GetTransactionInfoByIdResponse,
+  ICreatePayWithCreditCardTransactionInput,
+  ICreatePayWithCreditCardTransactionResponse,
 } from './interfaces';
 
 @Injectable()
@@ -141,6 +143,48 @@ export class WompiService {
         },
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  async createPayWithCreditCardTransaction(
+    input: ICreatePayWithCreditCardTransactionInput,
+  ): Promise<ICreatePayWithCreditCardTransactionResponse> {
+    try {
+      // 1. Obtener información del comerciante
+      const merchantInfo = await this.getMerchantInfo();
+
+      // 2. Tokenizar tarjeta
+      const tokenize: TokenizeCreditCardData =
+        await this.createTokenizeCreditCard({
+          number: input.card_number,
+          exp_month: input.exp_month,
+          exp_year: input.exp_year,
+          cvc: input.cvc,
+          card_holder: input.card_holder,
+        });
+
+      // 3. Crear transacción con ese token
+      const transactionInput: CreateCreditCardTransactionInput = {
+        amount_in_cents: input.amount_in_cents,
+        currency: input.currency,
+        customer_email: input.customer_email,
+        acceptance_token: merchantInfo.presigned_acceptance.acceptance_token,
+        reference: `${input.reference}_${Date.now()}`,
+        payment_method: {
+          installments: input.installments,
+          token: tokenize.id,
+        },
+      };
+      const transaction =
+        await this.createCreditCardTransaction(transactionInput);
+
+      // 4. Obtener información de la transacción
+      const transactionInfo = await this.getTransactionInfoById(transaction.id);
+
+      return { merchantInfo, tokenize, transaction, transactionInfo };
+    } catch (error) {
+      this.logger.error('Error en testWompiFlow', error);
+      throw error;
     }
   }
 }

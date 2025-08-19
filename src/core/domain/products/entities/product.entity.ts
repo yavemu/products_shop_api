@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsInt,
   IsPositive,
@@ -6,6 +7,8 @@ import {
   Min,
   MaxLength,
   IsUrl,
+  IsOptional,
+  IsDate,
 } from 'class-validator';
 
 export class Product {
@@ -37,4 +40,14 @@ export class Product {
 
   @IsUrl()
   thumbnail: string;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  createdAt?: Date;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  updatedAt?: Date;
 }
