@@ -1,4 +1,3 @@
-// src/core/application/payments/payment-order.usecase.ts
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { OrderStatusEnum } from '../../../infrastructure/database/entities/order.orm-entity';
 import { IPayOrderInput } from './interfaces/payment-order.interface';
@@ -18,6 +17,7 @@ import {
   ORDER_REPOSITORY,
   type OrderRepositoryPort,
 } from '../../../core/domain/orders/ports/order-repository.port';
+import { Order } from '../../../core/domain/orders/entities/order.entity';
 
 @Injectable()
 export class PayOrderUseCase {
@@ -46,22 +46,57 @@ export class PayOrderUseCase {
       );
     }
 
+    // 2) Actualizar datos de la orden
+    order.status = OrderStatusEnum.PROCCESING_PAY;
+    order.deliveryAmount = input.deliveryAmount;
+    order.deliveryName = input.deliveryName;
+    await this.updateOrder(order);
+
     // 2) Crear transacción PENDING
     const transactionData = new Transaction();
     transactionData.orderId = orderId;
-    transactionData.status = 'PENDING';
-    const transaction = await this.transactionRepository.save(transactionData);
+    transactionData.status = OrderStatusEnum.PENDING;
+    const transaction = await this.updateTransaction(transactionData);
 
     // 3) Ejecutar flujo de pasarela con el proveedor
+    const paymentDataInput: ICreatePayWithCreditCardTransactionInput = {
+      amount_in_cents: Number(order.totalAmount) + Number(order.deliveryAmount),
+      currency: 'COP',
+      customer_email: order.customerEmail,
+      reference: `${order.id}_${Date.now()}`,
+      card_number: input.cardNumber,
+      exp_month: input.expMonth,
+      exp_year: input.expYear,
+      cvc: input.cvc,
+      installments: input.installments,
+      card_holder: input.cardHolder,
+    };
     const paymentProviderResponse: ICreatePayWithCreditCardTransactionResponse =
-      await this.doPayWithCreditCardWompiFlow(input);
+      await this.doPayWithCreditCardWompiFlow(paymentDataInput);
 
-    const transactionUpdated = this.getPaymentDataToPersistInTansaction(
+    // 4) Actualizar datos de la transacción
+    const transactionUpdatedResult = this.getPaymentDataToPersistInTransaction(
       transaction,
       paymentProviderResponse,
     );
 
-    return await this.transactionRepository.save(transactionUpdated);
+    // 5) Guardar transacción actualizada con la primer respuesta del proveedor
+    const updatedTransaction = await this.updateTransaction(
+      transactionUpdatedResult,
+    );
+
+    // 6) Consultar polling de la transacción para obtener respuesta final
+    const pollingTransactionResult =
+      await this.pollingTransaction(updatedTransaction);
+
+    const savedPollingTransaction = await this.updateTransaction(
+      pollingTransactionResult,
+    );
+
+    order.status = savedPollingTransaction.status as OrderStatusEnum;
+    await this.updateOrder(order);
+
+    return savedPollingTransaction;
   }
   private async doPayWithCreditCardWompiFlow(
     input: ICreatePayWithCreditCardTransactionInput,
@@ -71,7 +106,7 @@ export class PayOrderUseCase {
     return payWithCreditCardFlow;
   }
 
-  private getPaymentDataToPersistInTansaction(
+  private getPaymentDataToPersistInTransaction(
     createdTransaction: Transaction,
     paymentProviderResponse: ICreatePayWithCreditCardTransactionResponse,
   ): Transaction {
@@ -81,6 +116,10 @@ export class PayOrderUseCase {
     const merchant = paymentProviderResponse.merchantInfo;
 
     const toPersist = {
+      status:
+        transaction.status === 'PENDING'
+          ? OrderStatusEnum.PROCCESING_PAY
+          : transaction.status,
       providerName: 'WOMPI',
       providerTransactionId: transaction.id?.toString(),
       providerStatus: transaction.status?.toString(),
@@ -109,10 +148,46 @@ export class PayOrderUseCase {
     } as Partial<Transaction>;
 
     const transactionToUpdate: Transaction = {
-      ...toPersist,
       ...createdTransaction,
+      ...toPersist,
     };
 
     return transactionToUpdate;
+  }
+
+  private async pollingTransaction(
+    transaction: Transaction,
+  ): Promise<Transaction> {
+    console.log('Iniciar pollTransactionStatus');
+    const newTransactionResponse =
+      await this.wompiService.pollTransactionStatus(
+        transaction.providerTransactionId as string,
+      );
+    console.log('Resultado pollTransactionStatus', newTransactionResponse);
+
+    transaction.status = OrderStatusEnum.CANCELLED;
+    transaction.providerStatus = newTransactionResponse.status;
+    transaction.providerStatusMessage = newTransactionResponse.status_message;
+    transaction.providerRawLastResponse = JSON.stringify(
+      newTransactionResponse,
+    );
+    if (newTransactionResponse.status === 'APPROVED') {
+      transaction.status = OrderStatusEnum.CONFIRMED;
+    }
+
+    console.log('Retornar datos de la transacción', transaction);
+    return transaction;
+  }
+
+  private async updateTransaction(
+    transaction: Transaction,
+  ): Promise<Transaction> {
+    return await this.transactionRepository.save(transaction);
+  }
+
+  private async updateOrder(order: Order): Promise<Order> {
+    console.log('====order', order);
+
+    return await this.orderRepository.save(order);
   }
 }

@@ -176,12 +176,20 @@ export class TransactionOrmEntity {
   providerMerchantName?: string;
 
   @Column({
-    name: 'provider_raw_response',
+    name: 'provider_raw_first_response',
     type: 'text',
     nullable: true,
   })
   @Exclude()
-  providerRawResponse?: string;
+  providerRawFirstResponse?: string;
+
+  @Column({
+    name: 'provider_raw_last_response',
+    type: 'text',
+    nullable: true,
+  })
+  @Exclude()
+  providerRawLastResponse?: string;
 
   @CreateDateColumn({ name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

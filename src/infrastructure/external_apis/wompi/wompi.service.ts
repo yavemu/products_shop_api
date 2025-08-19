@@ -187,4 +187,68 @@ export class WompiService {
       throw error;
     }
   }
+
+  async pollTransactionStatus(
+    transactionId: string,
+    maxAttempts: number = 5,
+    intervalMs: number = 1000,
+  ): Promise<GetTransactionInfoByIdResponse> {
+    const finalStatuses = ['ERROR', 'APPROVED'] as const;
+    let attempts = 0;
+    let lastResponse: GetTransactionInfoByIdResponse | undefined;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+
+      try {
+        this.logger.log(
+          `Retry ${attempts}/${maxAttempts} to get transaction by id ${transactionId}`,
+        );
+
+        const response: GetTransactionInfoByIdResponse =
+          await this.getTransactionInfoById(transactionId);
+
+        if (!response || !('status' in response) || !response.status) {
+          this.logger.warn(`Invalid response format on attempt ${attempts}`);
+        } else {
+          lastResponse = response;
+          const status = response.status;
+
+          this.logger.log(`Current status: ${status} (retry ${attempts})`);
+
+          if (
+            finalStatuses.includes(status as (typeof finalStatuses)[number])
+          ) {
+            this.logger.log(
+              `Final status reached: ${status} after ${attempts} attempts`,
+            );
+            return response;
+          }
+        }
+
+        if (attempts < maxAttempts) {
+          await this.delay(intervalMs);
+        }
+      } catch (error: any) {
+        this.logger.error(
+          `Error retrieving transaction on attempt ${attempts}: ${error?.message ?? error}`,
+        );
+
+        if (attempts < maxAttempts) {
+          await this.delay(intervalMs);
+        }
+      }
+    }
+
+    if (!lastResponse) {
+      throw new Error(
+        `Failed to retrieve transaction ${maxAttempts} attempts for transaction ${transactionId}`,
+      );
+    }
+    return lastResponse;
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 }

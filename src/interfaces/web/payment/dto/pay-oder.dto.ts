@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmail,
   IsNumber,
   IsPositive,
   IsString,
@@ -10,30 +9,19 @@ import {
 
 export class PayOrderDto {
   @ApiProperty({
-    example: 500000,
-    description: 'Monto de la transacción en centavos',
+    example: 50000,
+    description: 'Monto del proveedor de envío',
   })
   @IsNumber()
   @IsPositive()
-  amount_in_cents: number;
-
-  @ApiProperty({ example: 'COP', description: 'Moneda de la transacción' })
-  @IsString()
-  currency: string;
+  deliveryAmount: number;
 
   @ApiProperty({
-    example: 'test@example.com',
-    description: 'Correo del cliente',
-  })
-  @IsEmail()
-  customer_email: string;
-
-  @ApiProperty({
-    example: 'order-123',
-    description: 'Referencia única de la transacción',
+    example: 'Interrapidisimo',
+    description: 'Nombre del proveedor de envío',
   })
   @IsString()
-  reference: string;
+  deliveryName: string;
 
   @ApiProperty({
     example: '4242424242424242',
@@ -44,7 +32,7 @@ export class PayOrderDto {
   @Matches(/^\d+$/, {
     message: 'El número de tarjeta solo debe contener dígitos',
   })
-  card_number: string;
+  cardNumber: string;
 
   @ApiProperty({
     example: '12',
@@ -53,7 +41,7 @@ export class PayOrderDto {
   @IsString()
   @Length(2, 2, { message: 'El mes debe tener exactamente 2 dígitos' })
   @Matches(/^(0[1-9]|1[0-2])$/, { message: 'El mes debe estar entre 01 y 12' })
-  exp_month: string;
+  expMonth: string;
 
   @ApiProperty({
     example: '29',
@@ -62,7 +50,7 @@ export class PayOrderDto {
   @IsString()
   @Length(2, 4, { message: 'El año debe tener 2 o 4 dígitos' })
   @Matches(/^\d+$/, { message: 'El año solo debe contener dígitos' })
-  exp_year: string;
+  expYear: string;
 
   @ApiProperty({
     example: '123',
@@ -86,5 +74,5 @@ export class PayOrderDto {
     description: 'Nombre del titular de la tarjeta',
   })
   @IsString()
-  card_holder: string;
+  cardHolder: string;
 }

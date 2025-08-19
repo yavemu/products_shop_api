@@ -10,6 +10,8 @@ import {
 } from 'class-validator';
 
 export class Transaction {
+  id: number;
+
   @IsString()
   @IsNotEmpty()
   @MaxLength(50)
@@ -112,7 +114,11 @@ export class Transaction {
 
   @IsString()
   @IsOptional()
-  providerRawResponse?: string;
+  providerRawFirstResponse?: string;
+
+  @IsString()
+  @IsOptional()
+  providerRawLastResponse?: string;
 
   @IsOptional()
   @Type(() => Date)

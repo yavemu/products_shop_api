@@ -12,6 +12,7 @@ import { TransactionOrmEntity } from './transaction.orm-entity';
 export enum OrderStatusEnum {
   PREORDENED = 'preordered',
   PENDING = 'pending',
+  PROCCESING_PAY = 'proccessing_pay',
   CONFIRMED = 'confirmed',
   SHIPPED = 'shipped',
   DELIVERED = 'delivered',
@@ -55,8 +56,31 @@ export class OrderOrmEntity {
   })
   shippingAddress: string;
 
-  @Column({ name: 'total_amount', type: 'decimal', precision: 10, scale: 2 })
+  @Column({
+    name: 'total_amount',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    nullable: false,
+  })
   totalAmount: number;
+
+  @Column({
+    name: 'delivery_amount',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0,
+  })
+  deliveryAmount?: number;
+
+  @Column({
+    name: 'delivery_name',
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  deliveryName?: string;
 
   @Column({
     name: 'status',

@@ -33,6 +33,15 @@ export class Order {
   @IsPositive()
   totalAmount: number;
 
+  @IsOptional()
+  @IsString()
+  deliveryName?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  deliveryAmount?: number;
+
   @IsEnum(OrderStatusEnum)
   status: OrderStatusEnum;
 
