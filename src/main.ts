@@ -1,3 +1,4 @@
+import { version } from '../package.json';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -18,7 +19,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Products Shop API')
     .setDescription('API documentation for Products Shop')
-    .setVersion('1.0')
+    .setVersion(version)
     .addBearerAuth()
     .build();
 
