@@ -46,7 +46,7 @@ export class CreateOrderUseCase {
     newOrder.status = OrderStatusEnum.PREORDENED;
     newOrder.orderDetails = [];
 
-    // Usar for...of en lugar de forEach para permitir await
+    // Guardar la orden
     for (const item of createOrderDto.products) {
       const orderDetail = new OrderDetail();
 

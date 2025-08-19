@@ -11,7 +11,7 @@ import {
 import { Type, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class OrderProducts {
+export class CreateOrderProductsDto {
   @ApiProperty({
     description: 'Product ID of the item being ordered',
     example: 1,
@@ -69,7 +69,7 @@ export class CreateOrderDto {
 
   @ApiProperty({
     description: 'List of products ordered',
-    type: [OrderProducts],
+    type: [CreateOrderProductsDto],
     minItems: 1,
     example: [
       { id: 1, quantity: 2 },
@@ -79,6 +79,6 @@ export class CreateOrderDto {
   @IsArray()
   @ArrayMinSize(1, { message: 'At least one order detail is required' })
   @ValidateNested({ each: true })
-  @Type(() => OrderProducts)
-  products: OrderProducts[];
+  @Type(() => CreateOrderProductsDto)
+  products: CreateOrderProductsDto[];
 }
