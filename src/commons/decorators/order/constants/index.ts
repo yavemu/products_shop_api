@@ -6,6 +6,7 @@ import { Product } from '../../../../core/domain/products/entities/product.entit
 export const ORDERS_EXAMPLE: Order[] = [
   {
     id: 1,
+    customerId: 1,
     customerName: 'María García',
     customerEmail: 'maria.garcia@email.com',
     customerPhone: '+57 301 234 5678',
@@ -38,6 +39,7 @@ export const ORDERS_EXAMPLE: Order[] = [
   },
   {
     id: 2,
+    customerId: 2,
     customerName: 'Juan Pérez',
     customerEmail: 'juan.perez@email.com',
     customerPhone: '+57 300 123 4567',

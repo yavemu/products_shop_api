@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { PayOrderDto } from './dto/pay-oder.dto';
 import { PayOrderUseCase } from '../../../core/application/payments/payment-order.usecase';
 
-@ApiTags('payments')
+@ApiTags('Payments')
 @Controller('payments')
 export class PaymentController {
   constructor(private readonly payOrder: PayOrderUseCase) {}

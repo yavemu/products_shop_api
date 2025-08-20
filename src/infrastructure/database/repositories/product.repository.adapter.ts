@@ -32,6 +32,15 @@ export class ProductRepositoryAdapter implements ProductRepositoryPort {
     return this.repository.findOne({ where: { id } });
   }
 
+  async update(id: number, product: Partial<Product>): Promise<Product> {
+    await this.repository.update(id, product);
+    const updatedProduct = await this.repository.findOne({ where: { id } });
+    if (!updatedProduct) {
+      throw new Error('Product not found');
+    }
+    return updatedProduct;
+  }
+
   async count(): Promise<number> {
     return await this.repository.count();
   }

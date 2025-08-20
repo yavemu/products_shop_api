@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from './infrastructure/modules/product.module';
 import { OrderModule } from './infrastructure/modules/order.module';
 import { TransactionModule } from './infrastructure/modules/transaction.module';
+import { CustomerModule } from './infrastructure/modules/customer.module';
+import { DeliveryModule } from './infrastructure/modules/delivery.module';
 import { WompiModule } from './infrastructure/external_apis/wompi/wompi.module';
 import { OrderDetailOrmEntity } from './infrastructure/database/entities/order-detail.orm.entity';
 import { PaymentModule } from './infrastructure/modules/payment.module';
@@ -37,6 +39,8 @@ import { PaymentModule } from './infrastructure/modules/payment.module';
     OrderDetailOrmEntity,
     TransactionModule,
     PaymentModule,
+    CustomerModule,
+    DeliveryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

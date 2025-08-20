@@ -3,11 +3,15 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { OrderDetailOrmEntity } from './order-detail.orm.entity';
 import { TransactionOrmEntity } from './transaction.orm-entity';
+import { CustomerOrmEntity } from './customer.orm.entity';
+import { DeliveryOrmEntity } from './delivery.orm.entity';
 
 export enum OrderStatusEnum {
   PREORDENED = 'preordered',
@@ -23,6 +27,13 @@ export enum OrderStatusEnum {
 export class OrderOrmEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({
+    name: 'customer_id',
+    type: 'int',
+    nullable: false,
+  })
+  customerId: number;
 
   @Column({
     name: 'customer_name',
@@ -107,4 +118,8 @@ export class OrderOrmEntity {
     eager: true,
   })
   transactions: TransactionOrmEntity[];
+
+  @ManyToOne(() => CustomerOrmEntity, (customer) => customer.orders)
+  @JoinColumn({ name: 'customer_id' })
+  customer: CustomerOrmEntity;
 }
