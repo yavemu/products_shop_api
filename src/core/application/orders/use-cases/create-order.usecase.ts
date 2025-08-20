@@ -10,6 +10,14 @@ import {
 import { OrderDetail } from '../../../domain/orders/entities/order-detail.entity';
 import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm-entity';
 import { ICreateOrder } from '../interfaces/create-order.interface';
+import {
+  CUSTOMER_REPOSITORY,
+  type CustomerRepositoryPort,
+} from '../../../domain/customers/ports/customer-repository.port';
+import {
+  DELIVERY_REPOSITORY,
+  type DeliveryRepositoryPort,
+} from '../../../domain/deliveries/ports/delivery-repository.port';
 
 @Injectable()
 export class CreateOrderUseCase {
@@ -18,6 +26,10 @@ export class CreateOrderUseCase {
     private readonly repository: OrderRepositoryPort,
     @Inject(PRODUCT_REPOSITORY)
     private readonly productRepository: ProductRepositoryPort,
+    @Inject(CUSTOMER_REPOSITORY)
+    private readonly customerRepository: CustomerRepositoryPort,
+    @Inject(DELIVERY_REPOSITORY)
+    private readonly deliveryRepository: DeliveryRepositoryPort,
   ) {}
 
   async execute(createOrderDto: ICreateOrder): Promise<Order | null> {
@@ -36,17 +48,24 @@ export class CreateOrderUseCase {
       throw new Error('Uno o varios productos no fueron encontrados');
     }
 
+    //Buscar customer si no existe entonces crearlo
+    const customer = await this.findOrCreateCustomer(createOrderDto);
+    //crear delivery
+    //PENDIENTE POR HACER => VALIDAR QUE EXISTA DELIVERY SI NO EXISTE RETORNA ERROR - SE REQUIERE PARA REALIZAR EL PAGO
+    //const delivery = await this.deliveryRepository.create(createOrderDto);
+
     // Crear la orden como preorden sin detalles
     const newOrder = new Order();
+    newOrder.customerId = customer.id as number;
+    newOrder.deliveryId = createOrderDto.deliveryId; //Actualizar cuando se cree delivery o valide delivery
     newOrder.customerName = createOrderDto.customerName;
     newOrder.customerEmail = createOrderDto.customerEmail;
     newOrder.customerPhone = createOrderDto.customerPhone;
-    newOrder.shippingAddress = createOrderDto.shippingAddress;
     newOrder.totalAmount = totalAmount;
     newOrder.status = OrderStatusEnum.PREORDENED;
     newOrder.orderDetails = [];
 
-    // Guardar la orden
+    // Guardar la orden preorden
     for (const item of createOrderDto.products) {
       const orderDetail = new OrderDetail();
 
@@ -91,5 +110,21 @@ export class CreateOrderUseCase {
     }
 
     return this.repository.findById(savedOrder.id as number);
+  }
+
+  async findOrCreateCustomer(createOrderDto: ICreateOrder) {
+    const customer = await this.customerRepository.findByEmail(
+      createOrderDto.customerEmail,
+    );
+
+    if (customer) {
+      return customer;
+    }
+
+    return this.customerRepository.create({
+      name: createOrderDto.customerName,
+      email: createOrderDto.customerEmail,
+      phone: createOrderDto.customerPhone || '',
+    });
   }
 }

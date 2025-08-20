@@ -7,6 +7,7 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
 } from 'typeorm';
 import { OrderDetailOrmEntity } from './order-detail.orm.entity';
 import { TransactionOrmEntity } from './transaction.orm-entity';
@@ -27,6 +28,13 @@ export enum OrderStatusEnum {
 export class OrderOrmEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({
+    name: 'delivery_id',
+    type: 'int',
+    nullable: false,
+  })
+  deliveryId: number;
 
   @Column({
     name: 'customer_id',
@@ -60,14 +68,6 @@ export class OrderOrmEntity {
   customerPhone: string;
 
   @Column({
-    name: 'shipping_address',
-    type: 'varchar',
-    length: 255,
-    nullable: false,
-  })
-  shippingAddress: string;
-
-  @Column({
     name: 'total_amount',
     type: 'decimal',
     precision: 10,
@@ -75,23 +75,6 @@ export class OrderOrmEntity {
     nullable: false,
   })
   totalAmount: number;
-
-  @Column({
-    name: 'delivery_amount',
-    type: 'decimal',
-    precision: 10,
-    scale: 2,
-    default: 0,
-  })
-  deliveryAmount?: number;
-
-  @Column({
-    name: 'delivery_name',
-    type: 'varchar',
-    length: 255,
-    nullable: true,
-  })
-  deliveryName?: string;
 
   @Column({
     name: 'status',
@@ -122,4 +105,8 @@ export class OrderOrmEntity {
   @ManyToOne(() => CustomerOrmEntity, (customer) => customer.orders)
   @JoinColumn({ name: 'customer_id' })
   customer: CustomerOrmEntity;
+
+  @OneToOne(() => DeliveryOrmEntity, (deli) => deli.order, { cascade: true })
+  @JoinColumn({ name: 'delivery_id' })
+  delivery: DeliveryOrmEntity;
 }

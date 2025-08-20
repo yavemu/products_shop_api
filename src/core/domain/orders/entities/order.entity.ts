@@ -21,6 +21,10 @@ export class Order {
 
   @IsNumber()
   @IsPositive()
+  deliveryId: number;
+
+  @IsNumber()
+  @IsPositive()
   customerId: number;
 
   @IsString()
@@ -33,21 +37,9 @@ export class Order {
   @IsString()
   customerPhone?: string;
 
-  @IsString()
-  shippingAddress: string;
-
   @IsNumber()
   @IsPositive()
   totalAmount: number;
-
-  @IsOptional()
-  @IsString()
-  deliveryName?: string;
-
-  @IsOptional()
-  @IsNumber()
-  @IsPositive()
-  deliveryAmount?: number;
 
   @IsEnum(OrderStatusEnum)
   status: OrderStatusEnum;
@@ -73,14 +65,11 @@ export class Order {
   @Type(() => Transaction)
   transactions?: Transaction[];
 
-  @IsOptional()
   @ValidateNested()
   @Type(() => Customer)
-  customer?: Customer;
+  customer: Customer;
 
-  @IsArray()
-  @IsOptional()
-  @ValidateNested({ each: true })
+  @ValidateNested()
   @Type(() => Delivery)
-  deliveries?: Delivery[];
+  delivery?: Delivery;
 }

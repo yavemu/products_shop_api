@@ -7,10 +7,11 @@ const SUCCESS_RESPONSE = ORDERS_EXAMPLE[0];
 
 const INPUT_DATA: CreateOrderDto = {
   customerId: SUCCESS_RESPONSE.customerId,
+  deliveryId: SUCCESS_RESPONSE.deliveryId,
+  shippingAddress: 'Calle 123, Medellín, Colombia',
   customerName: SUCCESS_RESPONSE.customerName,
   customerEmail: SUCCESS_RESPONSE.customerEmail,
   customerPhone: SUCCESS_RESPONSE.customerPhone,
-  shippingAddress: SUCCESS_RESPONSE.shippingAddress,
   products: [{ id: 1, quantity: 2 }],
 };
 

@@ -5,7 +5,12 @@ import {
   IsEnum,
   IsNumber,
   IsPositive,
+  ValidateNested,
+  IsOptional,
+  IsDate,
 } from 'class-validator';
+import { Order } from '../../orders/entities/order.entity';
+import { Type } from 'class-transformer';
 
 export enum DeliveryStatusEnum {
   PENDING = 'pending',
@@ -38,4 +43,17 @@ export class Delivery {
 
   @IsEnum(DeliveryStatusEnum)
   status: DeliveryStatusEnum;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  createdAt?: Date;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  updatedAt?: Date;
+
+  @ValidateNested()
+  order: Order;
 }
