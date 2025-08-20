@@ -146,3 +146,146 @@ Después de ejecutar el comando de cobertura, puedes encontrar el reporte detall
 La aplicación está lista para ser desplegada en cualquier proveedor de nube que soporte Node.js (AWS, Google Cloud, Railway, Heroku, etc.).
 
 Asegúrate de configurar las variables de entorno correspondientes en el entorno de producción y establecer `DB_SYNCHRONIZE=false` para evitar que TypeORM modifique el esquema de la base de datos de forma automática.
+
+
+## Cobertura de Código (Testing)
+```bash
+---------------------------------------------------|---------|----------|---------|---------|-------------------
+File                                               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------------------------------------------|---------|----------|---------|---------|-------------------
+All files                                          |   94.68 |    73.08 |   89.26 |    94.1 |                   
+ src                                               |     100 |      100 |     100 |     100 |                   
+  app.module.ts                                    |     100 |      100 |     100 |     100 |                   
+ src/commons/decorators                            |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+ src/commons/decorators/customer                   |     100 |      100 |     100 |     100 |                   
+  create-customer.decorator.ts                     |     100 |      100 |     100 |     100 |                   
+  get-customer-by-email.decorator.ts               |     100 |      100 |     100 |     100 |                   
+ src/commons/decorators/customer/constants         |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+ src/commons/decorators/delivery                   |     100 |      100 |     100 |     100 |                   
+  create-delivery.decorator.ts                     |     100 |      100 |     100 |     100 |                   
+ src/commons/decorators/delivery/constants         |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+ src/commons/decorators/order                      |     100 |      100 |     100 |     100 |                   
+  create-order.decorator.ts                        |     100 |      100 |     100 |     100 |                   
+  get-all-orders.decorator.ts                      |     100 |      100 |     100 |     100 |                   
+  get-order-by-id.decorator.ts                     |     100 |      100 |     100 |     100 |                   
+ src/commons/decorators/order/constants            |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+ src/commons/decorators/product                    |     100 |      100 |     100 |     100 |                   
+  get-all-products.decorator.ts                    |     100 |      100 |     100 |     100 |                   
+  get-product-by-id.decorator.ts                   |     100 |      100 |     100 |     100 |                   
+ src/commons/decorators/product/constants          |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+ src/commons/filters                               |     100 |      100 |     100 |     100 |                   
+  http-exception.filter.ts                         |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+ src/core/application/customers/use-cases          |     100 |      100 |     100 |     100 |                   
+  create-customer.usecase.ts                       |     100 |      100 |     100 |     100 |                   
+  get-customer-by-email.usecase.ts                 |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+ src/core/application/deliveries/use-cases         |     100 |      100 |     100 |     100 |                   
+  create-delivery.usecase.ts                       |     100 |      100 |     100 |     100 |                   
+  get-delivery-by-id.usecase.ts                    |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+  update-delivery.usecase.ts                       |     100 |      100 |     100 |     100 |                   
+ src/core/application/orders/use-cases             |    95.4 |    73.52 |     100 |      95 |                   
+  create-order.usecase.ts                          |   94.28 |    73.52 |     100 |   94.02 | 64,87,122,133     
+  get-order-by-id.usecase.ts                       |     100 |      100 |     100 |     100 |                   
+  get-orders.usecase.ts                            |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+ src/core/application/payments                     |   87.87 |    61.53 |    87.5 |    87.5 |                   
+  payment-order.usecase.ts                         |   87.87 |    61.53 |    87.5 |    87.5 | 190,196-205       
+ src/core/application/products/use-cases           |     100 |      100 |     100 |     100 |                   
+  create-product.usecase.ts                        |     100 |      100 |     100 |     100 |                   
+  get-product-by-id.usecase.ts                     |     100 |      100 |     100 |     100 |                   
+  get-products.usecase.ts                          |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+  seed-products.usecase.ts                         |     100 |      100 |     100 |     100 |                   
+ src/core/application/transactions/use-cases       |     100 |      100 |     100 |     100 |                   
+  create-transaction.usecase.ts                    |     100 |      100 |     100 |     100 |                   
+  get-transaction-by-id.usecase.ts                 |     100 |      100 |     100 |     100 |                   
+  index.ts                                         |     100 |      100 |     100 |     100 |                   
+ src/core/domain/customers/entities                |   88.88 |      100 |       0 |   88.88 |                   
+  customer.entity.ts                               |   88.88 |      100 |       0 |   88.88 | 33                
+ src/core/domain/customers/ports                   |     100 |      100 |     100 |     100 |                   
+  customer-repository.port.ts                      |     100 |      100 |     100 |     100 |                   
+ src/core/domain/deliveries/entities               |    87.5 |    81.25 |   33.33 |    87.5 |                   
+  delivery.entity.ts                               |    87.5 |    81.25 |   33.33 |    87.5 | 44,49             
+ src/core/domain/deliveries/enums                  |     100 |      100 |     100 |     100 |                   
+  delivery-status.enum.ts                          |     100 |      100 |     100 |     100 |                   
+ src/core/domain/deliveries/ports                  |     100 |      100 |     100 |     100 |                   
+  delivery-repository.port.ts                      |     100 |      100 |     100 |     100 |                   
+ src/core/domain/orders/entities                   |   79.48 |    82.14 |       0 |   79.48 |                   
+  order-detail.entity.ts                           |   83.33 |       75 |       0 |   83.33 | 35,40             
+  order.entity.ts                                  |   77.77 |       85 |       0 |   77.77 | 48,53,59,65,69,73 
+ src/core/domain/orders/ports                      |     100 |      100 |     100 |     100 |                   
+  order-detail-repository.port.ts                  |     100 |      100 |     100 |     100 |                   
+  order-repository.port.ts                         |     100 |      100 |     100 |     100 |                   
+ src/core/domain/products/entities                 |       0 |        0 |       0 |       0 |                   
+  product.entity.ts                                |       0 |        0 |       0 |       0 | 1-52              
+ src/core/domain/products/ports                    |     100 |      100 |     100 |     100 |                   
+  product-repository.port.ts                       |     100 |      100 |     100 |     100 |                   
+ src/core/domain/transactions/entities             |    93.1 |       75 |       0 |    93.1 |                   
+  transaction.entity.ts                            |    93.1 |       75 |       0 |    93.1 | 124,129           
+ src/core/domain/transactions/ports                |     100 |      100 |     100 |     100 |                   
+  transaction-repository.port.ts                   |     100 |      100 |     100 |     100 |                   
+ src/infrastructure/database/entities              |     100 |    80.43 |     100 |     100 |                   
+  customer.orm.entity.ts                           |     100 |      100 |     100 |     100 |                   
+  delivery.orm.entity.ts                           |     100 |     62.5 |     100 |     100 | 49-52             
+  order-detail.orm.entity.ts                       |     100 |     87.5 |     100 |     100 | 41                
+  order.orm-entity.ts                              |     100 |    83.33 |     100 |     100 | 88-91,111         
+  product.orm-entity.ts                            |     100 |      100 |     100 |     100 |                   
+  transaction.orm-entity.ts                        |     100 |    83.33 |     100 |     100 | 195-198           
+ src/infrastructure/database/repositories          |     100 |    83.33 |     100 |     100 |                   
+  customer.repository.adapter.ts                   |     100 |    83.33 |     100 |     100 | 12                
+  delivery.repository.adapter.ts                   |     100 |     87.5 |     100 |     100 | 12                
+  order-detail.repository.adapter.ts               |     100 |       75 |     100 |     100 | 12                
+  order.repository.adapter.ts                      |     100 |       75 |     100 |     100 | 12                
+  product.repository.adapter.ts                    |     100 |       90 |     100 |     100 | 13                
+  transaction.repository.adapter.ts                |     100 |       75 |     100 |     100 | 12                
+ src/infrastructure/external_apis/wompi            |   92.39 |    59.45 |     100 |   91.95 |                   
+  wompi.adapter.ts                                 |     100 |      100 |     100 |     100 |                   
+  wompi.module.ts                                  |     100 |      100 |     100 |     100 |                   
+  wompi.service.ts                                 |   90.66 |    59.45 |     100 |   90.27 | 158-184,212,244   
+ src/infrastructure/external_apis/wompi/interfaces |       0 |      100 |     100 |       0 |                   
+  index.ts                                         |       0 |      100 |     100 |       0 | 1-6               
+ src/infrastructure/modules                        |     100 |      100 |     100 |     100 |                   
+  customer.module.ts                               |     100 |      100 |     100 |     100 |                   
+  delivery.module.ts                               |     100 |      100 |     100 |     100 |                   
+  order.module.ts                                  |     100 |      100 |     100 |     100 |                   
+  payment.module.ts                                |     100 |      100 |     100 |     100 |                   
+  product.module.ts                                |     100 |      100 |     100 |     100 |                   
+  transaction.module.ts                            |     100 |      100 |     100 |     100 |                   
+ src/interfaces/web/customer                       |     100 |       75 |     100 |     100 |                   
+  customer.controller.ts                           |     100 |       75 |     100 |     100 | 16-30             
+ src/interfaces/web/customer/dto                   |     100 |      100 |     100 |     100 |                   
+  create-customer.dto.ts                           |     100 |      100 |     100 |     100 |                   
+ src/interfaces/web/delivery                       |     100 |       75 |     100 |     100 |                   
+  delivery.controller.ts                           |     100 |       75 |     100 |     100 | 9-15              
+ src/interfaces/web/delivery/dto                   |     100 |       75 |     100 |     100 |                   
+  create-delivery.dto.ts                           |     100 |       75 |     100 |     100 | 57                
+  update-delivery-status.dto.ts                    |     100 |       75 |     100 |     100 | 11                
+ src/interfaces/web/order                          |     100 |       75 |     100 |     100 |                   
+  order.controller.ts                              |     100 |       75 |     100 |     100 | 25-44             
+ src/interfaces/web/order/dto                      |     100 |      100 |     100 |     100 |                   
+  create-order.dto.ts                              |     100 |      100 |     100 |     100 |                   
+ src/interfaces/web/payment                        |     100 |       75 |     100 |     100 |                   
+  payment.controller.ts                            |     100 |       75 |     100 |     100 | 9-19              
+ src/interfaces/web/payment/dto                    |     100 |      100 |     100 |     100 |                   
+  pay-oder.dto.ts                                  |     100 |      100 |     100 |     100 |                   
+ src/interfaces/web/product                        |     100 |       75 |     100 |     100 |                   
+  product.controller.ts                            |     100 |       75 |     100 |     100 | 14                
+---------------------------------------------------|---------|----------|---------|---------|-------------------
+Jest: "global" coverage threshold for branches (80%) not met: 73.08%
+
+Test Suites: 35 passed, 35 total
+Tests:       183 passed, 183 total
+Snapshots:   0 total
+Time:        5.798 s
+Ran all test suites.
+
+```
+
+
