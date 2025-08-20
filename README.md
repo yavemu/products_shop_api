@@ -31,6 +31,14 @@ El proyecto implementa **Arquitectura Hexagonal (Puertos y Adaptadores)** para s
 *   **Application**: Orquesta los casos de uso (use cases), conectando los puertos de entrada (controladores) con la lógica de dominio.
 *   **Infrastructure**: Implementa los adaptadores para los puertos definidos en el dominio. Aquí se encuentran las conexiones a la base de datos (TypeORM), las llamadas a APIs externas (----) y los controladores web.
 
+## Requisitos de versiones
+
+Este proyecto se ha desarrollado y probado con las siguientes versiones:
+
+*   **Node.js**: `v20.12.2`
+*   **npm**: `10.5.0`
+*   **PostgreSQL**: `14.17`
+
 ## Instalación y Uso
 
 1.  Clonar el repositorio:
