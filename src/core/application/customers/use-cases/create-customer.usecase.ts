@@ -11,6 +11,12 @@ export class CreateCustomerUseCase {
   ) {}
 
   async execute(data: Customer): Promise<Customer> {
+    const existingCustomer = await this.repository.findByEmail(data.email);
+    
+    if (existingCustomer) {
+      return existingCustomer;
+    }
+    
     return this.repository.create(data);
   }
 }
