@@ -1,6 +1,6 @@
 import { validate } from 'class-validator';
-import { UpdateDeliveryStatusDto } from '../update-delivery-status.dto';
-import { DeliveryStatusEnum } from '../../../../../core/domain/deliveries/enums/delivery-status.enum';
+import { UpdateDeliveryStatusDto } from '../dto/update-delivery-status.dto';
+import { DeliveryStatusEnum } from '../../../../core/domain/deliveries/enums/delivery-status.enum';
 
 describe('UpdateDeliveryStatusDto', () => {
   it('should validate a valid status update', async () => {

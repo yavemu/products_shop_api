@@ -3,7 +3,6 @@ import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { of, throwError } from 'rxjs';
-import * as crypto from 'crypto';
 
 import { WompiService } from '../wompi.service';
 import {
@@ -388,6 +387,97 @@ describe('WompiService', () => {
           HttpStatus.BAD_REQUEST,
         ),
       );
+    });
+  });
+
+  describe('createPayWithCreditCardTransaction', () => {
+    it('should throw HttpException if any step fails (merchant info)', async () => {
+      httpService.get.mockReturnValueOnce(
+        throwError(() => new Error('API down')),
+      );
+
+      const input = {
+        card_number: '4242424242424242',
+        exp_month: '12',
+        exp_year: '25',
+        cvc: '123',
+        card_holder: 'John Doe',
+        amount_in_cents: 10000,
+        currency: 'COP',
+        customer_email: 'customer@test.com',
+        reference: 'ref_123',
+        installments: 1,
+      };
+
+      await expect(
+        service.createPayWithCreditCardTransaction(input),
+      ).rejects.toBeInstanceOf(HttpException);
+    });
+  });
+
+  describe('pollTransactionStatus', () => {
+    it('should return immediately if transaction is approved', async () => {
+      jest.spyOn(service, 'getTransactionInfoById').mockResolvedValueOnce({
+        ...MOCK_GET_TX_BY_ID_RESPONSE,
+        status: 'APPROVED',
+      });
+
+      const result = await service.pollTransactionStatus(TX_ID, 3, 10);
+
+      expect(result.status).toBe('APPROVED');
+      expect(service.getTransactionInfoById).toHaveBeenCalledTimes(1);
+    });
+
+    it('should retry until reaching final status', async () => {
+      const pendingResponse = {
+        ...MOCK_GET_TX_BY_ID_RESPONSE,
+        status: 'PENDING',
+      };
+      const approvedResponse = {
+        ...MOCK_GET_TX_BY_ID_RESPONSE,
+        status: 'APPROVED',
+      };
+
+      const spy = jest
+        .spyOn(service, 'getTransactionInfoById')
+        .mockResolvedValueOnce(pendingResponse)
+        .mockResolvedValueOnce(pendingResponse)
+        .mockResolvedValueOnce(approvedResponse);
+
+      const result = await service.pollTransactionStatus(TX_ID, 5, 5);
+
+      expect(result.status).toBe('APPROVED');
+      expect(spy).toHaveBeenCalledTimes(3);
+    });
+
+    it('should return last response if no final status after max attempts', async () => {
+      const pendingResponse = {
+        ...MOCK_GET_TX_BY_ID_RESPONSE,
+        status: 'PENDING',
+      };
+
+      jest
+        .spyOn(service, 'getTransactionInfoById')
+        .mockResolvedValue(pendingResponse);
+
+      const result = await service.pollTransactionStatus(TX_ID, 2, 5);
+
+      expect(result).toEqual(pendingResponse);
+    });
+
+    it('should handle error during attempts and still retry', async () => {
+      const spy = jest
+        .spyOn(service, 'getTransactionInfoById')
+        .mockRejectedValueOnce(new Error('Temporary error'))
+        .mockResolvedValueOnce({
+          ...MOCK_GET_TX_BY_ID_RESPONSE,
+          status: 'APPROVED',
+        });
+
+      const result = await service.pollTransactionStatus(TX_ID, 3, 5);
+
+      expect(result.status).toBe('APPROVED');
+      expect(spy).toHaveBeenCalledTimes(2);
     });
   });
 });

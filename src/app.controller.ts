@@ -8,7 +8,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post('run-credit-card-wompi-flow')
+  @Post('run-credit-card-flow')
   @ApiOperation({
     summary:
       'Prueba flujo completo de transacción con tarjeta de crédito en Wompi',

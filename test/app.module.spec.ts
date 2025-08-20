@@ -10,7 +10,7 @@ describe('AppModule', () => {
     }).compile();
   });
 
-  it('Debe compilar el AppModule correctamente', () => {
+  it('should be defined', () => {
     expect(module).toBeDefined();
   });
 });
