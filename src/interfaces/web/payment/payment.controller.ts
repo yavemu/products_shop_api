@@ -8,7 +8,7 @@ import { PayOrderUseCase } from '../../../core/application/payments/payment-orde
 export class PaymentController {
   constructor(private readonly payOrder: PayOrderUseCase) {}
 
-  @Post(':orderId')
+  @Post(':orderId/pay-with-credit-card')
   @ApiOperation({
     summary: 'Realiza el pago de una orden existente',
     description:

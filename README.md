@@ -120,6 +120,8 @@ La documentación completa e interactiva está disponible a través de **Swagger
     *   **Request Body**: `{ "customerId": "uuid-del-cliente", "items": [{ "productId": "uuid-del-producto", "quantity": 1 }] }`
     *   **Response**: La orden creada con estado `PENDING` y el total calculado.
 
+*   **`POST /payments/:orderId/pay-with-credit-card`**: Realiza el pago de una orden de compra utilizando tarjeta de crédito.
+
 ## Pruebas (Testing)
 
 El proyecto utiliza **Jest** para las pruebas unitarias y de integración. El objetivo de cobertura es del **80%**.
