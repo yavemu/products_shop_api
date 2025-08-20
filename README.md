@@ -2,21 +2,23 @@
 
 ## Descripción
 
-Este proyecto es un API backend diseñada para gestionar el flujo completo de compra de productos. Permite a los usuarios consultar productos, crear clientes, generar órdenes de compra y procesar pagos a través de la pasarela de pagos de **Wompi**.
+Este proyecto es un API backend diseñada para gestionar el flujo completo de compra de productos. Permite a los usuarios consultar productos, crear clientes, generar órdenes de compra y procesar pagos a través de la pasarela de pagos de **----**.
 
 El sistema está construido con **Nest.js** y sigue los principios de la **Arquitectura Hexagonal** para garantizar una clara separación de responsabilidades y facilitar su mantenimiento y escalabilidad.
 
 ## Repositorio
 
 * Backend: [https://github.com/yavemu/products_shop_api](https://github.com/yavemu/products_shop_api)
-* Frontend: [https://github.com/yavemu/products_shop](https://github.com/yavemu/products_shop)
+* Frontend: [https://github.com/yavemu/products_shop_web](https://github.com/yavemu/products_shop_web)
+
+* Demo: [https://products-shop-web.vercel.app/](https://products-shop-web.vercel.app/)
 
 ## Características Principales
 
 *   Consulta de catálogo de productos.
 *   Gestión de clientes.
 *   Creación de órdenes en estado `PENDING`.
-*   Integración con la pasarela de pagos **Wompi** (Sandbox) para procesar transacciones.
+*   Integración con la pasarela de pagos **----** (Sandbox) para procesar transacciones.
 *   Actualización del estado de la transacción y la orden (éxito o fallo).
 *   Actualización automática del stock de productos tras una compra exitosa.
 *   Documentación de la API con Swagger.
@@ -27,47 +29,7 @@ El proyecto implementa **Arquitectura Hexagonal (Puertos y Adaptadores)** para s
 
 *   **Domain**: Contiene los modelos de negocio, interfaces (puertos) y la lógica de dominio pura. No tiene dependencias externas.
 *   **Application**: Orquesta los casos de uso (use cases), conectando los puertos de entrada (controladores) con la lógica de dominio.
-*   **Infrastructure**: Implementa los adaptadores para los puertos definidos en el dominio. Aquí se encuentran las conexiones a la base de datos (TypeORM), las llamadas a APIs externas (Wompi) y los controladores web.
-
-## Diseño de la Base de Datos (PostgreSQL)
-
-Se utilizan las siguientes entidades principales:
-
-### `Product`
-| Columna | Tipo | Descripción |
-| :--- | :--- | :--- |
-| `id` | `uuid` | Identificador único del producto. |
-| `name` | `varchar` | Nombre del producto. |
-| `description` | `text` | Descripción detallada. |
-| `price` | `numeric` | Precio del producto. |
-| `stock` | `integer` | Cantidad disponible en inventario. |
-
-### `Customer`
-| Columna | Tipo | Descripción |
-| :--- | :--- | :--- |
-| `id` | `uuid` | Identificador único del cliente. |
-| `email` | `varchar` | Correo electrónico del cliente. |
-| `fullName` | `varchar` | Nombre completo del cliente. |
-| `phone` | `varchar` | Número de teléfono. |
-
-### `Order`
-| Columna | Tipo | Descripción |
-| :--- | :--- | :--- |
-| `id` | `uuid` | Identificador único de la orden. |
-| `customerId` | `uuid` | FK al cliente que realiza la orden. |
-| `totalAmount`| `numeric` | Monto total de la orden. |
-| `status` | `varchar` | Estado de la orden (`PENDING`, `PAID`, `FAILED`). |
-
-### `Transaction`
-| Columna | Tipo | Descripción |
-| :--- | :--- | :--- |
-| `id` | `uuid` | Identificador único de la transacción. |
-| `orderId` | `uuid` | FK a la orden asociada. |
-| `wompiId` | `varchar` | ID de la transacción en Wompi. |
-| `status` | `varchar` | Estado de la transacción (`PENDING`, `APPROVED`, `DECLINED`, `ERROR`). |
-| `amount` | `numeric` | Monto de la transacción. |
-
----
+*   **Infrastructure**: Implementa los adaptadores para los puertos definidos en el dominio. Aquí se encuentran las conexiones a la base de datos (TypeORM), las llamadas a APIs externas (----) y los controladores web.
 
 ## Instalación y Uso
 
@@ -84,7 +46,7 @@ Se utilizan las siguientes entidades principales:
     ```bash
     cp .env.example .env
     ```
-    *   Asegúrate de configurar las credenciales de la base de datos y las claves de Wompi.
+    *   Asegúrate de configurar las credenciales de la base de datos y las claves de W.o.m.p.i.
     *   Para el desarrollo inicial, `DB_SYNCHRONIZE` puede estar en `true` para que TypeORM cree las tablas automáticamente.
 
 4.  Poblar la base de datos con productos de prueba:
@@ -96,15 +58,18 @@ Se utilizan las siguientes entidades principales:
     npm run start:dev
     ```
 
-## Endpoints de la API
+## Documentación de la API (Swagger)
 
 La documentación completa e interactiva está disponible a través de **Swagger** en la ruta `/apidoc` una vez que el servidor está en ejecución.
 
 **URL Base**: `http://localhost:3000`
+**Documentación**: `http://localhost:3000/apidoc`
 
+
+## Endpoints de la API
 
 ### Test pasarela de pagos con flujo de tarjeta de crédito
-*   **`POST /run-credit-card-flow`**: Realiza el flujo completo de compra con tarjeta de crédito utilizando Wompi. Este endpoint se deja disponible para pruebas y demostraciones del funcionamiento de la API de pagos de forma independiente.
+*   **`POST /run-credit-card-flow`**: Realiza el flujo completo de compra con tarjeta de crédito utilizando W.o.m.p.i. Este endpoint se deja disponible para pruebas y demostraciones del funcionamiento de la API de pagos de forma independiente.
 
 ### Productos
 *   **`GET /products`**: Obtiene una lista de todos los productos disponibles.
@@ -142,12 +107,6 @@ Después de ejecutar el comando de cobertura, puedes encontrar el reporte detall
 *   **Variables de Entorno**: Toda la información sensible (claves de API, credenciales de base de datos) se gestiona a través de variables de entorno y el archivo `.env`, que no debe ser subido al repositorio.
 *   **Autenticación**: (Pendiente) Se planea implementar un sistema de autenticación basado en Claves de API para proteger los endpoints.
 *   **HTTPS**: Para el despliegue en producción, es mandatorio configurar un servidor web (como Nginx) para que actúe como proxy inverso y gestione las conexiones a través de HTTPS con un certificado SSL/TLS.
-
-## Despliegue
-
-La aplicación está lista para ser desplegada en cualquier proveedor de nube que soporte Node.js (AWS, Google Cloud, Railway, Heroku, etc.).
-
-Asegúrate de configurar las variables de entorno correspondientes en el entorno de producción y establecer `DB_SYNCHRONIZE=false` para evitar que TypeORM modifique el esquema de la base de datos de forma automática.
 
 
 ## Cobertura de Código (Testing)
