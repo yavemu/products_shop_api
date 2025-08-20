@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
 import { DeliveryStatusEnum } from '../../../core/domain/deliveries/enums/delivery-status.enum';
-import { OrderOrmEntity } from './order.orm-entity';
+import { OrderOrmEntity } from './order.orm.entity';
 
 @Entity('deliveries')
 export class DeliveryOrmEntity {

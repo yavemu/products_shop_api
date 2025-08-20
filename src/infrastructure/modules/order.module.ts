@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderController } from '../../interfaces/web/order/order.controller';
-import { OrderOrmEntity } from '../database/entities/order.orm-entity';
+import { OrderOrmEntity } from '../database/entities/order.orm.entity';
 
 import { ProductOrmEntity } from '../database/entities/product.orm-entity';
 import { OrderRepositoryAdapter } from '../database/repositories/order.repository.adapter';

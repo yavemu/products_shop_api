@@ -102,11 +102,16 @@ export class OrderOrmEntity {
   })
   transactions: TransactionOrmEntity[];
 
-  @ManyToOne(() => CustomerOrmEntity, (customer) => customer.orders)
+  @ManyToOne(() => CustomerOrmEntity, (customer) => customer.orders, {
+    eager: true,
+  })
   @JoinColumn({ name: 'customer_id' })
   customer: CustomerOrmEntity;
 
-  @OneToOne(() => DeliveryOrmEntity, (deli) => deli.order, { cascade: true })
+  @OneToOne(() => DeliveryOrmEntity, (deli) => deli.order, {
+    cascade: true,
+    eager: true,
+  })
   @JoinColumn({ name: 'delivery_id' })
   delivery: DeliveryOrmEntity;
 }

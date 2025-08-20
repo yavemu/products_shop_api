@@ -3,7 +3,7 @@ import { PaymentController } from '../payment.controller';
 import { PayOrderUseCase } from '../../../../core/application/payments/payment-order.usecase';
 import { PayOrderDto } from '../dto/pay-oder.dto';
 import { Transaction } from '../../../../core/domain/transactions/entities/transaction.entity';
-import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm-entity';
+import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm.entity';
 
 const TransactionMock: Transaction = {
   id: 1,

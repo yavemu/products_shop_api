@@ -5,7 +5,7 @@ import {
   OrderRepositoryPort,
 } from '../../../../../core/domain/orders/ports/order-repository.port';
 import { Order } from '../../../../../core/domain/orders/entities/order.entity';
-import { OrderStatusEnum } from '../../../../../infrastructure/database/entities/order.orm-entity';
+import { OrderStatusEnum } from '../../../../../infrastructure/database/entities/order.orm.entity';
 import { OrderDetail } from '../../../../../core/domain/orders/entities/order-detail.entity';
 
 const OrdersMocks: Order[] = [

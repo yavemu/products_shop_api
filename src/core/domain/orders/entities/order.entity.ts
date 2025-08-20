@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { OrderDetail } from './order-detail.entity';
-import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm-entity';
+import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm.entity';
 import { Transaction } from '../../transactions/entities/transaction.entity';
 import { Customer } from '../../customers/entities/customer.entity';
 import { Delivery } from '../../deliveries/entities/delivery.entity';

@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { OrderStatusEnum } from '../../../infrastructure/database/entities/order.orm-entity';
+import { OrderStatusEnum } from '../../../infrastructure/database/entities/order.orm.entity';
 import { IPayOrderInput } from './interfaces/payment-order.interface';
 import { Transaction } from '../../../core/domain/transactions/entities/transaction.entity';
 

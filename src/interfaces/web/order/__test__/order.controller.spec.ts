@@ -7,7 +7,7 @@ import {
   GetOrdersUseCase,
 } from '../../../../core/application/orders/use-cases';
 import { Order } from '../../../../core/domain/orders/entities/order.entity';
-import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm-entity';
+import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm.entity';
 
 describe('OrderController', () => {
   let controller: OrderController;

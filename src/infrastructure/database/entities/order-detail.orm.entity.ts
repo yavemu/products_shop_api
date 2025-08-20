@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { OrderOrmEntity } from './order.orm-entity';
+import { OrderOrmEntity } from './order.orm.entity';
 import { ProductOrmEntity } from './product.orm-entity';
 import { Exclude } from 'class-transformer';
 
