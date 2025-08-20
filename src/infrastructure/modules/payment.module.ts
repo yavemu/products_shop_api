@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { OrderOrmEntity } from '../database/entities/order.orm-entity';
+import { OrderOrmEntity } from '../database/entities/order.orm.entity';
 import { TransactionModule } from './transaction.module';
 import { OrderModule } from './order.module';
 import { PaymentController } from '../../interfaces/web/payment/payment.controller';

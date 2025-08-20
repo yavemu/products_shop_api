@@ -1,6 +1,6 @@
 import { Order } from '../../../../../core/domain/orders/entities/order.entity';
 import { GetOrderByIdUseCase } from '../get-order-by-id.usecase';
-import { OrderStatusEnum } from '../../../../../infrastructure/database/entities/order.orm-entity';
+import { OrderStatusEnum } from '../../../../../infrastructure/database/entities/order.orm.entity';
 const OrderMock: Order = {
   id: 1,
   customerName: 'John Doe',

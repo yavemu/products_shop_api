@@ -8,7 +8,7 @@ import {
   type ProductRepositoryPort,
 } from '../../../domain/products/ports/product-repository.port';
 import { OrderDetail } from '../../../domain/orders/entities/order-detail.entity';
-import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm-entity';
+import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm.entity';
 import { ICreateOrder } from '../interfaces/create-order.interface';
 import {
   CreateCustomerUseCase,

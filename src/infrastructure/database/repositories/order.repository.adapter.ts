@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from '../../../core/domain/orders/entities/order.entity';
 import { OrderRepositoryPort } from '../../../core/domain/orders/ports/order-repository.port';
-import { OrderOrmEntity } from '../entities/order.orm-entity';
+import { OrderOrmEntity } from '../entities/order.orm.entity';
 
 @Injectable()
 export class OrderRepositoryAdapter implements OrderRepositoryPort {

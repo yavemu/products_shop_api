@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { OrderOrmEntity } from './order.orm-entity';
+import { OrderOrmEntity } from './order.orm.entity';
 import { Exclude } from 'class-transformer';
 
 @Entity('transactions')

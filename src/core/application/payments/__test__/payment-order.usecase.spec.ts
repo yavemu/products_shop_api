@@ -10,7 +10,7 @@ import {
   OrderRepositoryPort,
 } from '../../../../core/domain/orders/ports/order-repository.port';
 import { NotFoundException } from '@nestjs/common';
-import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm-entity';
+import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm.entity';
 import { Transaction } from '../../../../core/domain/transactions/entities/transaction.entity';
 import { Order } from '../../../../core/domain/orders/entities/order.entity';
 

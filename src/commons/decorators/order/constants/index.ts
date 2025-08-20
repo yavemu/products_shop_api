@@ -1,4 +1,4 @@
-import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm-entity';
+import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm.entity';
 import { Order } from '../../../../core/domain/orders/entities/order.entity';
 import { OrderDetail } from '../../../../core/domain/orders/entities/order-detail.entity';
 import { Product } from '../../../../core/domain/products/entities/product.entity';
