@@ -13,9 +13,15 @@ import { Type } from 'class-transformer';
 import { OrderDetail } from './order-detail.entity';
 import { OrderStatusEnum } from '../../../../infrastructure/database/entities/order.orm-entity';
 import { Transaction } from '../../transactions/entities/transaction.entity';
+import { Customer } from '../../customers/entities/customer.entity';
+import { Delivery } from '../../deliveries/entities/delivery.entity';
 
 export class Order {
   id?: number;
+
+  @IsNumber()
+  @IsPositive()
+  customerId: number;
 
   @IsString()
   customerName: string;
@@ -66,4 +72,15 @@ export class Order {
   @ValidateNested({ each: true })
   @Type(() => Transaction)
   transactions?: Transaction[];
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => Customer)
+  customer?: Customer;
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => Delivery)
+  deliveries?: Delivery[];
 }

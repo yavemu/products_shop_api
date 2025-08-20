@@ -63,6 +63,7 @@ describe('CreateOrderProductsDto', () => {
 
 describe('CreateOrderDto', () => {
   const validDto = {
+    customerId: 1,
     customerName: 'John Doe',
     customerEmail: 'john@example.com',
     shippingAddress: '123 Main St',
@@ -86,6 +87,26 @@ describe('CreateOrderDto', () => {
   });
 
   describe('Validation', () => {
+    it('should fail if customerId is missing', async () => {
+      const dto = plainToInstance(CreateOrderDto, {
+        ...validDto,
+        customerId: undefined,
+      });
+      const errors = await validate(dto);
+      expect(errors.length).toBe(1);
+      expect(errors[0].constraints).toHaveProperty('isInt');
+    });
+
+    it('should fail if customerId is less than 1', async () => {
+      const dto = plainToInstance(CreateOrderDto, {
+        ...validDto,
+        customerId: 0,
+      });
+      const errors = await validate(dto);
+      expect(errors.length).toBe(1);
+      expect(errors[0].constraints).toHaveProperty('min');
+    });
+
     it('should fail if customerName is missing', async () => {
       const dto = plainToInstance(CreateOrderDto, {
         ...validDto,

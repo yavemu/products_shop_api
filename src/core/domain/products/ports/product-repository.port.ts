@@ -7,5 +7,6 @@ export interface ProductRepositoryPort {
   save(product: Product): Promise<Product>;
   findAll(filters?: IProductFilter): Promise<Product[]>;
   findById(id: number): Promise<Product | null>;
+  update(id: number, product: Partial<Product>): Promise<Product>;
   count(): Promise<number>;
 }

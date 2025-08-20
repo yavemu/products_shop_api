@@ -6,6 +6,7 @@ import { ORDERS_EXAMPLE } from './constants';
 const SUCCESS_RESPONSE = ORDERS_EXAMPLE[0];
 
 const INPUT_DATA: CreateOrderDto = {
+  customerId: SUCCESS_RESPONSE.customerId,
   customerName: SUCCESS_RESPONSE.customerName,
   customerEmail: SUCCESS_RESPONSE.customerEmail,
   customerPhone: SUCCESS_RESPONSE.customerPhone,
