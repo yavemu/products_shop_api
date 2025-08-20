@@ -18,11 +18,30 @@ export class DeliveryRepositoryAdapter implements DeliveryRepositoryPort {
     return this.mapToDomain(savedDelivery);
   }
 
+  async findById(id: number): Promise<Delivery | null> {
+    const delivery = await this.repository.findOne({
+      where: { id },
+    });
+    return delivery ? this.mapToDomain(delivery) : null;
+  }
+
+  async update(id: number, delivery: Partial<Delivery>): Promise<Delivery> {
+    await this.repository.update(id, delivery);
+    const updatedDelivery = await this.repository.findOne({
+      where: { id },
+    });
+    if (!updatedDelivery) {
+      throw new Error('Delivery not found');
+    }
+    return this.mapToDomain(updatedDelivery);
+  }
+
   private mapToDomain(ormEntity: DeliveryOrmEntity): Delivery {
     const delivery = new Delivery();
     delivery.id = ormEntity.id;
+    delivery.name = ormEntity.name;
     delivery.trackingNumber = ormEntity.trackingNumber;
-    delivery.address = ormEntity.address;
+    delivery.shippingAddress = ormEntity.shippingAddress;
     delivery.fee = ormEntity.fee;
     delivery.status = ormEntity.status;
     return delivery;

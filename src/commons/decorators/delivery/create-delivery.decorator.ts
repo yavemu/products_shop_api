@@ -8,7 +8,7 @@ const SUCCESS_RESPONSE = DELIVERIES_EXAMPLE[0];
 const INPUT_DATA: CreateDeliveryDto = {
   name: SUCCESS_RESPONSE.name,
   trackingNumber: SUCCESS_RESPONSE.trackingNumber,
-  address: SUCCESS_RESPONSE.address,
+  shippingAddress: SUCCESS_RESPONSE.shippingAddress,
   fee: SUCCESS_RESPONSE.fee,
   status: SUCCESS_RESPONSE.status,
 };

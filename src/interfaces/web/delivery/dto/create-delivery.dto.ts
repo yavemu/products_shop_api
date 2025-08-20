@@ -7,7 +7,7 @@ import {
   IsEnum,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { DeliveryStatusEnum } from '../../../../core/domain/deliveries/entities/delivery.entity';
+import { DeliveryStatusEnum } from '../../../../core/domain/deliveries/enums/delivery-status.enum';
 
 export class CreateDeliveryDto {
   @ApiProperty({
@@ -31,14 +31,14 @@ export class CreateDeliveryDto {
   trackingNumber: string;
 
   @ApiProperty({
-    description: 'Complete address',
+    description: 'Complete shipping address',
     example: 'Calle 123, Medellín, Colombia',
     maxLength: 255,
   })
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
-  address: string;
+  shippingAddress: string;
 
   @ApiProperty({
     description: 'Fee amount',

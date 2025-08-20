@@ -48,8 +48,6 @@ export class PayOrderUseCase {
 
     // 2) Actualizar datos de la orden
     order.status = OrderStatusEnum.PROCCESING_PAY;
-    order.deliveryAmount = input.deliveryAmount;
-    order.deliveryName = input.deliveryName;
 
     // 2) Crear transacción PENDING
     const transactionData = new Transaction();
@@ -60,8 +58,7 @@ export class PayOrderUseCase {
 
     // 3) Ejecutar flujo de pasarela con el proveedor
     const paymentDataInput: ICreatePayWithCreditCardTransactionInput = {
-      amount_in_cents:
-        Number(orderUpdated.totalAmount) + Number(orderUpdated.deliveryAmount),
+      amount_in_cents: Number(orderUpdated.totalAmount),
       currency: 'COP',
       customer_email: orderUpdated.customerEmail,
       reference: `${orderUpdated.id}_${Date.now()}`,
