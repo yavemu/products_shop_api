@@ -41,7 +41,7 @@ export class OrderController {
 
   @Post()
   @CreateOrderSwaggerDecorator()
-  async create(@Body() createOrderDto: CreateOrderDto): Promise<Order | null> {
+  async create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
     return this.createOrder.execute(createOrderDto);
   }
 }

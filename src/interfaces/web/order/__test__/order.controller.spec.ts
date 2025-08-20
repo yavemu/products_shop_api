@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { BadRequestException } from '@nestjs/common';
 import { OrderController } from '../order.controller';
 import {
   CreateOrderUseCase,
@@ -16,9 +17,11 @@ describe('OrderController', () => {
 
   const mockOrder: Order = {
     id: 1,
+    customerId: 1,
+    deliveryId: 1,
     customerName: 'John Doe',
     customerEmail: 'john@example.com',
-    shippingAddress: '123 Main St',
+    customerPhone: '123456789',
     totalAmount: 100,
     status: OrderStatusEnum.PENDING,
     orderDetails: [],
@@ -128,8 +131,11 @@ describe('OrderController', () => {
 
   describe('create()', () => {
     const validCreateDto = {
+      customerId: 1,
       customerName: 'Jane Doe',
       customerEmail: 'jane@example.com',
+      customerPhone: '123456789',
+      deliveryId: 1,
       shippingAddress: '456 Oak Ave',
       products: [{ id: 1, quantity: 3 }],
     };
@@ -141,11 +147,19 @@ describe('OrderController', () => {
       expect(createOrder.execute).toHaveBeenCalledWith(validCreateDto);
     });
 
-    it('should propagate error from use case', async () => {
-      createOrder.execute.mockRejectedValueOnce(new Error('Creation failed'));
+    it('should propagate exceptions from use case', async () => {
+      createOrder.execute.mockRejectedValueOnce(new BadRequestException('Stock insuficiente'));
 
       await expect(controller.create(validCreateDto)).rejects.toThrow(
-        'Creation failed',
+        BadRequestException
+      );
+    });
+
+    it('should propagate other errors from use case', async () => {
+      createOrder.execute.mockRejectedValueOnce(new Error('Unexpected error'));
+
+      await expect(controller.create(validCreateDto)).rejects.toThrow(
+        'Unexpected error',
       );
     });
 

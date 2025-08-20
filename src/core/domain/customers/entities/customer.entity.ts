@@ -3,7 +3,12 @@ import {
   IsEmail,
   IsNotEmpty,
   MaxLength,
+  IsOptional,
+  ValidateNested,
+  IsArray,
 } from 'class-validator';
+import { Order } from '../../orders/entities/order.entity';
+import { Type } from 'class-transformer';
 
 export class Customer {
   id?: number;
@@ -21,4 +26,10 @@ export class Customer {
   @IsNotEmpty()
   @MaxLength(20)
   phone: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => Order)
+  orders?: Order[];
 }

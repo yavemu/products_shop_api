@@ -44,6 +44,15 @@ export class CreateOrderDto {
   customerId: number;
 
   @ApiProperty({
+    description: 'Delivery ID',
+    example: 1,
+  })
+  @Transform(({ value }) => parseInt(value))
+  @IsInt()
+  @Min(1)
+  deliveryId: number;
+
+  @ApiProperty({
     description: 'Customer full name',
     example: 'Juan Pérez',
     maxLength: 100,

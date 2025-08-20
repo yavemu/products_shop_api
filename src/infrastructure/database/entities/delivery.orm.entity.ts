@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { DeliveryStatusEnum } from '../../../core/domain/deliveries/entities/delivery.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import { DeliveryStatusEnum } from '../../../core/domain/deliveries/enums/delivery-status.enum';
+import { OrderOrmEntity } from './order.orm-entity';
 
 @Entity('deliveries')
 export class DeliveryOrmEntity {
@@ -23,12 +24,12 @@ export class DeliveryOrmEntity {
   trackingNumber: string;
 
   @Column({
-    name: 'address',
+    name: 'shipping_address',
     type: 'varchar',
     length: 255,
     nullable: false,
   })
-  address: string;
+  shippingAddress: string;
 
   @Column({
     name: 'fee',
@@ -46,4 +47,7 @@ export class DeliveryOrmEntity {
     default: DeliveryStatusEnum.PENDING,
   })
   status: DeliveryStatusEnum;
+
+  @OneToOne(() => OrderOrmEntity, (order) => order.delivery)
+  order: OrderOrmEntity;
 }

@@ -64,6 +64,7 @@ describe('CreateOrderProductsDto', () => {
 describe('CreateOrderDto', () => {
   const validDto = {
     customerId: 1,
+    deliveryId: 1,
     customerName: 'John Doe',
     customerEmail: 'john@example.com',
     shippingAddress: '123 Main St',

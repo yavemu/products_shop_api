@@ -128,21 +128,21 @@ describe('PaymentController', () => {
       const result = await controller.doOrderPayment(orderId, PayOrderDtoMock);
 
       expect(result).toMatchObject({
-        id: expect.any(Number),
-        orderId: expect.any(Number),
-        status: expect.any(String),
-        providerName: expect.any(String),
-        providerTransactionId: expect.any(String),
-        providerStatus: expect.any(String),
-        createdAt: expect.any(Date),
-        updatedAt: expect.any(Date),
+        id: expect.any(Number) as number,
+        orderId: expect.any(Number) as number,
+        status: expect.any(String) as OrderStatusEnum,
+        providerName: expect.any(String) as string,
+        providerTransactionId: expect.any(String) as string,
+        providerStatus: expect.any(String) as string,
+        createdAt: expect.any(Date) as Date,
+        updatedAt: expect.any(Date) as Date,
       });
     });
 
     it('should handle different payment methods', async () => {
       const differentCards = [
-        { ...PayOrderDtoMock, cardNumber: '5555555555554444' }, // Mastercard
-        { ...PayOrderDtoMock, cardNumber: '378282246310005' }, // Amex
+        { ...PayOrderDtoMock, cardNumber: '5555555555554444' },
+        { ...PayOrderDtoMock, cardNumber: '378282246310005' },
       ];
 
       for (const cardDto of differentCards) {

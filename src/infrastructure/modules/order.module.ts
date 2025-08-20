@@ -16,6 +16,8 @@ import {
   GetOrdersUseCase,
 } from '../../core/application/orders/use-cases';
 import { OrderDetailOrmEntity } from '../database/entities/order-detail.orm.entity';
+import { CustomerModule } from './customer.module';
+import { DeliveryModule } from './delivery.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { OrderDetailOrmEntity } from '../database/entities/order-detail.orm.enti
       OrderDetailOrmEntity,
       ProductOrmEntity,
     ]),
+    CustomerModule,
+    DeliveryModule,
   ],
   controllers: [OrderController],
   providers: [

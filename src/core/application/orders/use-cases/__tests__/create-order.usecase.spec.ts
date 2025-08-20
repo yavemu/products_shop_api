@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { CreateOrderUseCase } from '../create-order.usecase';
 import { ORDER_REPOSITORY } from '../../../../domain/orders/ports/order-repository.port';
 import { PRODUCT_REPOSITORY } from '../../../../domain/products/ports/product-repository.port';
@@ -6,6 +7,14 @@ import { Order } from '../../../../domain/orders/entities/order.entity';
 import { OrderDetail } from '../../../../domain/orders/entities/order-detail.entity';
 import { OrderStatusEnum } from '../../../../../infrastructure/database/entities/order.orm-entity';
 import { ICreateOrder } from '../../interfaces/create-order.interface';
+import {
+  CreateCustomerUseCase,
+  GetCustomerByEmailUseCase,
+} from '../../../customers/use-cases';
+import {
+  GetDeliveryByIdUseCase,
+  UpdateDeliveryUseCase,
+} from '../../../deliveries/use-cases';
 
 const ProductsMock = [
   { id: 1, name: 'Product A', price: 100, stock: 10 },
@@ -13,9 +22,11 @@ const ProductsMock = [
 ];
 
 const CreateOrderDtoMock: ICreateOrder = {
+  customerId: 1,
   customerName: 'John Doe',
   customerEmail: 'john@example.com',
   customerPhone: '123456789',
+  deliveryId: 1,
   shippingAddress: '123 Main St',
   products: [
     { id: 1, quantity: 2 },
@@ -25,10 +36,11 @@ const CreateOrderDtoMock: ICreateOrder = {
 
 const OrderMock: Order = {
   id: 1,
+  customerId: 1,
+  deliveryId: 1,
   customerName: 'John Doe',
   customerEmail: 'john@example.com',
   customerPhone: '123456789',
-  shippingAddress: '123 Main St',
   totalAmount: 400,
   status: OrderStatusEnum.PENDING,
   orderDetails: [
@@ -61,6 +73,22 @@ const mockProductRepository = {
   save: jest.fn(),
 };
 
+const mockCreateCustomerUseCase = {
+  execute: jest.fn(),
+};
+
+const mockGetCustomerByEmailUseCase = {
+  execute: jest.fn(),
+};
+
+const mockGetDeliveryByIdUseCase = {
+  execute: jest.fn(),
+};
+
+const mockUpdateDeliveryUseCase = {
+  execute: jest.fn(),
+};
+
 describe('CreateOrderUseCase', () => {
   let useCase: CreateOrderUseCase;
 
@@ -70,6 +98,10 @@ describe('CreateOrderUseCase', () => {
         CreateOrderUseCase,
         { provide: ORDER_REPOSITORY, useValue: OrderMockRepository },
         { provide: PRODUCT_REPOSITORY, useValue: mockProductRepository },
+        { provide: CreateCustomerUseCase, useValue: mockCreateCustomerUseCase },
+        { provide: GetCustomerByEmailUseCase, useValue: mockGetCustomerByEmailUseCase },
+        { provide: GetDeliveryByIdUseCase, useValue: mockGetDeliveryByIdUseCase },
+        { provide: UpdateDeliveryUseCase, useValue: mockUpdateDeliveryUseCase },
       ],
     }).compile();
 
@@ -82,43 +114,71 @@ describe('CreateOrderUseCase', () => {
     mockProductRepository.findAll.mockResolvedValue(ProductsMock);
     OrderMockRepository.save.mockResolvedValue(OrderMock);
     OrderMockRepository.findById.mockResolvedValue(OrderMock);
+    mockGetCustomerByEmailUseCase.execute.mockResolvedValue(null);
+    mockCreateCustomerUseCase.execute.mockResolvedValue({ id: 1, name: 'John Doe', email: 'john@example.com', phone: '123456789' });
+    mockGetDeliveryByIdUseCase.execute.mockResolvedValue({ id: 1, shippingAddress: '123 Main St' });
+    mockUpdateDeliveryUseCase.execute.mockResolvedValue(undefined);
 
     const result = await useCase.execute(CreateOrderDtoMock);
 
     expect(mockProductRepository.findAll).toHaveBeenCalledWith({
       ids: [1, 2],
     });
+    expect(mockGetCustomerByEmailUseCase.execute).toHaveBeenCalledWith('john@example.com');
+    expect(mockCreateCustomerUseCase.execute).toHaveBeenCalledWith({
+      name: 'John Doe',
+      email: 'john@example.com',
+      phone: '123456789',
+    });
+    expect(mockGetDeliveryByIdUseCase.execute).toHaveBeenCalledWith(1);
     expect(OrderMockRepository.save).toHaveBeenCalled();
     expect(mockProductRepository.save).toHaveBeenCalledTimes(2);
     expect(result).toEqual(OrderMock);
   });
 
-  it('should throw an error if a product is missing', async () => {
+  it('should throw BadRequestException if a product is missing', async () => {
     mockProductRepository.findAll.mockResolvedValue([ProductsMock[0]]);
 
     await expect(useCase.execute(CreateOrderDtoMock)).rejects.toThrow(
-      'Uno o varios productos no fueron encontrados',
+      new BadRequestException('Uno o varios productos no fueron encontrados'),
     );
   });
 
-  it('should return null if stock is insufficient', async () => {
+  it('should throw BadRequestException if delivery is not found', async () => {
+    mockProductRepository.findAll.mockResolvedValue(ProductsMock);
+    mockGetCustomerByEmailUseCase.execute.mockResolvedValue(null);
+    mockCreateCustomerUseCase.execute.mockResolvedValue({ id: 1, name: 'John Doe', email: 'john@example.com', phone: '123456789' });
+    mockGetDeliveryByIdUseCase.execute.mockResolvedValue(null);
+
+    await expect(useCase.execute(CreateOrderDtoMock)).rejects.toThrow(
+      new BadRequestException('Delivery no encontrado'),
+    );
+  });
+
+  it('should throw BadRequestException if stock is insufficient', async () => {
     const lowStockProduct = { ...ProductsMock[0], stock: 1 };
     mockProductRepository.findAll.mockResolvedValue([
       lowStockProduct,
       ProductsMock[1],
     ]);
-
-    const result = await useCase.execute(CreateOrderDtoMock);
-
-    expect(result).toBeNull();
-  });
-
-  it('should throw an error if the order cannot be saved', async () => {
-    mockProductRepository.findAll.mockResolvedValue(ProductsMock);
-    OrderMockRepository.save.mockResolvedValue(null);
+    mockGetCustomerByEmailUseCase.execute.mockResolvedValue(null);
+    mockCreateCustomerUseCase.execute.mockResolvedValue({ id: 1, name: 'John Doe', email: 'john@example.com', phone: '123456789' });
+    mockGetDeliveryByIdUseCase.execute.mockResolvedValue({ id: 1, shippingAddress: '123 Main St' });
 
     await expect(useCase.execute(CreateOrderDtoMock)).rejects.toThrow(
-      'No se pudo guardar la orden',
+      new BadRequestException('Stock insuficiente para el producto Product A. Stock disponible: 1, cantidad solicitada: 2'),
+    );
+  });
+
+  it('should throw InternalServerErrorException if the order cannot be saved', async () => {
+    mockProductRepository.findAll.mockResolvedValue(ProductsMock);
+    OrderMockRepository.save.mockResolvedValue(null);
+    mockGetCustomerByEmailUseCase.execute.mockResolvedValue(null);
+    mockCreateCustomerUseCase.execute.mockResolvedValue({ id: 1, name: 'John Doe', email: 'john@example.com', phone: '123456789' });
+    mockGetDeliveryByIdUseCase.execute.mockResolvedValue({ id: 1, shippingAddress: '123 Main St' });
+
+    await expect(useCase.execute(CreateOrderDtoMock)).rejects.toThrow(
+      new InternalServerErrorException('No se pudo guardar la orden'),
     );
   });
 });

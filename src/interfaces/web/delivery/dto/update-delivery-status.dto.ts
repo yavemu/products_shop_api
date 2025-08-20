@@ -1,6 +1,6 @@
 import { IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { DeliveryStatusEnum } from '../../../../core/domain/deliveries/entities/delivery.entity';
+import { DeliveryStatusEnum } from '../../../../core/domain/deliveries/enums/delivery-status.enum';
 
 export class UpdateDeliveryStatusDto {
   @ApiProperty({

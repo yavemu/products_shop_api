@@ -5,14 +5,15 @@ import {
   IsEnum,
   IsNumber,
   IsPositive,
+  ValidateNested,
+  IsOptional,
+  IsDate,
 } from 'class-validator';
+import { Order } from '../../orders/entities/order.entity';
+import { Type } from 'class-transformer';
+import { DeliveryStatusEnum } from '../enums/delivery-status.enum';
 
-export enum DeliveryStatusEnum {
-  PENDING = 'pending',
-  IN_TRANSIT = 'in_transit',
-  DELIVERED = 'delivered',
-  FAILED = 'failed',
-}
+export { DeliveryStatusEnum };
 
 export class Delivery {
   id?: number;
@@ -30,7 +31,7 @@ export class Delivery {
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
-  address: string;
+  shippingAddress: string;
 
   @IsNumber()
   @IsPositive()
@@ -38,4 +39,18 @@ export class Delivery {
 
   @IsEnum(DeliveryStatusEnum)
   status: DeliveryStatusEnum;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  createdAt?: Date;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  updatedAt?: Date;
+
+  @IsOptional()
+  @ValidateNested()
+  order?: Order;
 }
