@@ -22,8 +22,8 @@ export class DeliveryRepositoryAdapter implements DeliveryRepositoryPort {
     const delivery = new Delivery();
     delivery.id = ormEntity.id;
     delivery.trackingNumber = ormEntity.trackingNumber;
-    delivery.deliveryAddress = ormEntity.deliveryAddress;
-    delivery.deliveryFee = ormEntity.deliveryFee;
+    delivery.address = ormEntity.address;
+    delivery.fee = ormEntity.fee;
     delivery.status = ormEntity.status;
     return delivery;
   }

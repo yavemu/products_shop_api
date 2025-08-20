@@ -6,9 +6,10 @@ import { DELIVERIES_EXAMPLE } from './constants';
 const SUCCESS_RESPONSE = DELIVERIES_EXAMPLE[0];
 
 const INPUT_DATA: CreateDeliveryDto = {
+  name: SUCCESS_RESPONSE.name,
   trackingNumber: SUCCESS_RESPONSE.trackingNumber,
-  deliveryAddress: SUCCESS_RESPONSE.deliveryAddress,
-  deliveryFee: SUCCESS_RESPONSE.deliveryFee,
+  address: SUCCESS_RESPONSE.address,
+  fee: SUCCESS_RESPONSE.fee,
   status: SUCCESS_RESPONSE.status,
 };
 
