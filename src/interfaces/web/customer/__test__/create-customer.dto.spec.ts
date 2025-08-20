@@ -1,5 +1,5 @@
 import { validate } from 'class-validator';
-import { CreateCustomerDto } from '../create-customer.dto';
+import { CreateCustomerDto } from '../dto/create-customer.dto';
 
 describe('CreateCustomerDto', () => {
   it('should validate a valid customer data', async () => {
