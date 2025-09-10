@@ -29,6 +29,9 @@ import { PaymentModule } from './infrastructure/modules/payment.module';
         password: configService.getOrThrow<string>('database.password'),
         database: configService.getOrThrow<string>('database.name'),
         autoLoadEntities: true,
+        ssl: {
+          rejectUnauthorized: false,
+        },
         synchronize: configService.getOrThrow<boolean>('database.synchronize'),
       }),
     }),

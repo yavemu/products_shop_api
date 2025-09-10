@@ -1,5 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateOrderUseCase } from '../create-order.usecase';
 import { ORDER_REPOSITORY } from '../../../../domain/orders/ports/order-repository.port';
 import { PRODUCT_REPOSITORY } from '../../../../domain/products/ports/product-repository.port';
@@ -99,8 +102,14 @@ describe('CreateOrderUseCase', () => {
         { provide: ORDER_REPOSITORY, useValue: OrderMockRepository },
         { provide: PRODUCT_REPOSITORY, useValue: mockProductRepository },
         { provide: CreateCustomerUseCase, useValue: mockCreateCustomerUseCase },
-        { provide: GetCustomerByEmailUseCase, useValue: mockGetCustomerByEmailUseCase },
-        { provide: GetDeliveryByIdUseCase, useValue: mockGetDeliveryByIdUseCase },
+        {
+          provide: GetCustomerByEmailUseCase,
+          useValue: mockGetCustomerByEmailUseCase,
+        },
+        {
+          provide: GetDeliveryByIdUseCase,
+          useValue: mockGetDeliveryByIdUseCase,
+        },
         { provide: UpdateDeliveryUseCase, useValue: mockUpdateDeliveryUseCase },
       ],
     }).compile();
@@ -115,8 +124,16 @@ describe('CreateOrderUseCase', () => {
     OrderMockRepository.save.mockResolvedValue(OrderMock);
     OrderMockRepository.findById.mockResolvedValue(OrderMock);
     mockGetCustomerByEmailUseCase.execute.mockResolvedValue(null);
-    mockCreateCustomerUseCase.execute.mockResolvedValue({ id: 1, name: 'John Doe', email: 'john@example.com', phone: '123456789' });
-    mockGetDeliveryByIdUseCase.execute.mockResolvedValue({ id: 1, shippingAddress: '123 Main St' });
+    mockCreateCustomerUseCase.execute.mockResolvedValue({
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com',
+      phone: '123456789',
+    });
+    mockGetDeliveryByIdUseCase.execute.mockResolvedValue({
+      id: 1,
+      shippingAddress: '123 Main St',
+    });
     mockUpdateDeliveryUseCase.execute.mockResolvedValue(undefined);
 
     const result = await useCase.execute(CreateOrderDtoMock);
@@ -124,7 +141,9 @@ describe('CreateOrderUseCase', () => {
     expect(mockProductRepository.findAll).toHaveBeenCalledWith({
       ids: [1, 2],
     });
-    expect(mockGetCustomerByEmailUseCase.execute).toHaveBeenCalledWith('john@example.com');
+    expect(mockGetCustomerByEmailUseCase.execute).toHaveBeenCalledWith(
+      'john@example.com',
+    );
     expect(mockCreateCustomerUseCase.execute).toHaveBeenCalledWith({
       name: 'John Doe',
       email: 'john@example.com',
@@ -147,7 +166,12 @@ describe('CreateOrderUseCase', () => {
   it('should throw BadRequestException if delivery is not found', async () => {
     mockProductRepository.findAll.mockResolvedValue(ProductsMock);
     mockGetCustomerByEmailUseCase.execute.mockResolvedValue(null);
-    mockCreateCustomerUseCase.execute.mockResolvedValue({ id: 1, name: 'John Doe', email: 'john@example.com', phone: '123456789' });
+    mockCreateCustomerUseCase.execute.mockResolvedValue({
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com',
+      phone: '123456789',
+    });
     mockGetDeliveryByIdUseCase.execute.mockResolvedValue(null);
 
     await expect(useCase.execute(CreateOrderDtoMock)).rejects.toThrow(
@@ -162,11 +186,21 @@ describe('CreateOrderUseCase', () => {
       ProductsMock[1],
     ]);
     mockGetCustomerByEmailUseCase.execute.mockResolvedValue(null);
-    mockCreateCustomerUseCase.execute.mockResolvedValue({ id: 1, name: 'John Doe', email: 'john@example.com', phone: '123456789' });
-    mockGetDeliveryByIdUseCase.execute.mockResolvedValue({ id: 1, shippingAddress: '123 Main St' });
+    mockCreateCustomerUseCase.execute.mockResolvedValue({
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com',
+      phone: '123456789',
+    });
+    mockGetDeliveryByIdUseCase.execute.mockResolvedValue({
+      id: 1,
+      shippingAddress: '123 Main St',
+    });
 
     await expect(useCase.execute(CreateOrderDtoMock)).rejects.toThrow(
-      new BadRequestException('Stock insuficiente para el producto Product A. Stock disponible: 1, cantidad solicitada: 2'),
+      new BadRequestException(
+        'Stock insuficiente para el producto Product A. Stock disponible: 1, cantidad solicitada: 2',
+      ),
     );
   });
 
@@ -174,8 +208,16 @@ describe('CreateOrderUseCase', () => {
     mockProductRepository.findAll.mockResolvedValue(ProductsMock);
     OrderMockRepository.save.mockResolvedValue(null);
     mockGetCustomerByEmailUseCase.execute.mockResolvedValue(null);
-    mockCreateCustomerUseCase.execute.mockResolvedValue({ id: 1, name: 'John Doe', email: 'john@example.com', phone: '123456789' });
-    mockGetDeliveryByIdUseCase.execute.mockResolvedValue({ id: 1, shippingAddress: '123 Main St' });
+    mockCreateCustomerUseCase.execute.mockResolvedValue({
+      id: 1,
+      name: 'John Doe',
+      email: 'john@example.com',
+      phone: '123456789',
+    });
+    mockGetDeliveryByIdUseCase.execute.mockResolvedValue({
+      id: 1,
+      shippingAddress: '123 Main St',
+    });
 
     await expect(useCase.execute(CreateOrderDtoMock)).rejects.toThrow(
       new InternalServerErrorException('No se pudo guardar la orden'),

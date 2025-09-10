@@ -35,6 +35,12 @@ export class Product {
   @IsPositive()
   price: number;
 
+  @IsPositive()
+  tax: number;
+
+  @IsPositive()
+  totalPrice: number;
+
   @IsUrl()
   mainImage: string;
 

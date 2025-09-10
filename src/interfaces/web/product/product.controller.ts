@@ -21,7 +21,7 @@ export class ProductController {
     return this.getProducts.execute();
   }
 
-  @Get('id')
+  @Get(':id')
   @GetProductByIdSwaggerDecorator()
   async getById(@Param('id') id: number) {
     return this.getProductById.execute(id);

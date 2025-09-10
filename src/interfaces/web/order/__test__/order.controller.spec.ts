@@ -148,10 +148,12 @@ describe('OrderController', () => {
     });
 
     it('should propagate exceptions from use case', async () => {
-      createOrder.execute.mockRejectedValueOnce(new BadRequestException('Stock insuficiente'));
+      createOrder.execute.mockRejectedValueOnce(
+        new BadRequestException('Stock insuficiente'),
+      );
 
       await expect(controller.create(validCreateDto)).rejects.toThrow(
-        BadRequestException
+        BadRequestException,
       );
     });
 

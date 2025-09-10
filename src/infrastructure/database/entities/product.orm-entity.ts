@@ -20,6 +20,15 @@ export class ProductOrmEntity {
   @Column({ name: 'price', type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
+  @Column({
+    name: 'tax',
+    type: 'decimal',
+    precision: 5,
+    scale: 2,
+    default: 19.0,
+  })
+  tax: number;
+
   @Column({ name: 'main_image', type: 'varchar', length: 255, nullable: false })
   mainImage: string;
 

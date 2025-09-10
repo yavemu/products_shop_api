@@ -1,4 +1,9 @@
-import { Injectable, Inject, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { Order } from '../../../domain/orders/entities/order.entity';
 import { ORDER_REPOSITORY } from '../../../domain/orders/ports/order-repository.port';
 
@@ -45,7 +50,9 @@ export class CreateOrderUseCase {
     });
 
     if (productsFound.length !== productsId.length) {
-      throw new BadRequestException('Uno o varios productos no fueron encontrados');
+      throw new BadRequestException(
+        'Uno o varios productos no fueron encontrados',
+      );
     }
 
     //Buscar customer si no existe entonces crearlo
@@ -84,21 +91,28 @@ export class CreateOrderUseCase {
       // Consultar producto y validar stock disponible
       const product = productsFound.find((p) => p.id === item.id);
       if (!product) {
-        throw new BadRequestException(`Producto con ID ${item.id} no encontrado`);
+        throw new BadRequestException(
+          `Producto con ID ${item.id} no encontrado`,
+        );
       }
 
       if (product.stock < item.quantity) {
-        throw new BadRequestException(`Stock insuficiente para el producto ${product.name}. Stock disponible: ${product.stock}, cantidad solicitada: ${item.quantity}`);
+        throw new BadRequestException(
+          `Stock insuficiente para el producto ${product.name}. Stock disponible: ${product.stock}, cantidad solicitada: ${item.quantity}`,
+        );
       }
 
-      const unitPrice = product.price;
-      const totalPrice = unitPrice * item.quantity;
-      totalAmount += totalPrice;
+      const unitPrice = product.price; // Precio original del producto
+      const subtotalPrice = unitPrice * item.quantity; // Subtotal sin IVA
+      const taxTotalPrice = subtotalPrice * (product.tax / 100); // Monto del IVA
+      const totalPrice = subtotalPrice + taxTotalPrice; // Total con IVA incluido
+      totalAmount += totalPrice; // Acumular para totalAmount de la orden
 
       orderDetail.productId = item.id;
       orderDetail.quantity = item.quantity;
-      orderDetail.unitPrice = unitPrice;
-      orderDetail.totalPrice = totalPrice;
+      orderDetail.unitPrice = unitPrice; // Precio original
+      orderDetail.totalPrice = totalPrice; // Precio total CON IVA
+      orderDetail.tax = product.tax; // Porcentaje de impuesto
       orderDetail.orderId = newOrder.id as number;
 
       newOrder.orderDetails.push(orderDetail);
@@ -119,7 +133,9 @@ export class CreateOrderUseCase {
 
     const finalOrder = await this.repository.findById(savedOrder.id as number);
     if (!finalOrder) {
-      throw new InternalServerErrorException('No se pudo recuperar la orden guardada');
+      throw new InternalServerErrorException(
+        'No se pudo recuperar la orden guardada',
+      );
     }
     return finalOrder;
   }

@@ -12,7 +12,11 @@ import { DeliveryController } from '../../interfaces/web/delivery/delivery.contr
 
 @Module({
   imports: [TypeOrmModule.forFeature([DeliveryOrmEntity])],
-  exports: [CreateDeliveryUseCase, GetDeliveryByIdUseCase, UpdateDeliveryUseCase],
+  exports: [
+    CreateDeliveryUseCase,
+    GetDeliveryByIdUseCase,
+    UpdateDeliveryUseCase,
+  ],
   controllers: [DeliveryController],
   providers: [
     DeliveryRepositoryAdapter,

@@ -15,7 +15,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  
+
   app.useGlobalFilters(new HttpExceptionFilter());
 
   // Configuración de Swagger
@@ -29,6 +29,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('apidoc', app, document);
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(4000);
 }
 bootstrap();

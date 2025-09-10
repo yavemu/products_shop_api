@@ -14,9 +14,11 @@ export class ProductRepositoryAdapter implements ProductRepositoryPort {
   ) {}
 
   async save(product: Product): Promise<Product> {
-    const entity = this.repository.create(product);
+    // Excluir totalPrice del guardado en BD ya que es calculado
+    const { totalPrice, ...productWithoutTotal } = product;
+    const entity = this.repository.create(productWithoutTotal);
     const saved = await this.repository.save(entity);
-    return saved;
+    return this.calculateTotalPrice(saved);
   }
 
   async findAll(filters?: IProductFilter): Promise<Product[]> {
@@ -25,11 +27,13 @@ export class ProductRepositoryAdapter implements ProductRepositoryPort {
       where['id'] = In(filters.ids);
     }
 
-    return this.repository.find({ where });
+    const products = await this.repository.find({ where });
+    return products.map(product => this.calculateTotalPrice(product));
   }
 
   async findById(id: number): Promise<Product | null> {
-    return this.repository.findOne({ where: { id } });
+    const product = await this.repository.findOne({ where: { id } });
+    return product ? this.calculateTotalPrice(product) : null;
   }
 
   async update(id: number, product: Partial<Product>): Promise<Product> {
@@ -38,10 +42,27 @@ export class ProductRepositoryAdapter implements ProductRepositoryPort {
     if (!updatedProduct) {
       throw new Error('Product not found');
     }
-    return updatedProduct;
+    return this.calculateTotalPrice(updatedProduct);
   }
 
   async count(): Promise<number> {
     return await this.repository.count();
+  }
+
+  private calculateTotalPrice(product: ProductOrmEntity): Product {
+    const productWithTotal = product as Product;
+    
+    // Convertir a números para cálculos precisos
+    const price = parseFloat(product.price.toString());
+    const tax = parseFloat(product.tax.toString());
+    
+    // Calcular impuesto y total
+    const taxAmount = price * (tax / 100);
+    const totalPrice = price + taxAmount;
+    
+    // Redondear a 2 decimales
+    productWithTotal.totalPrice = Math.round(totalPrice * 100) / 100;
+    
+    return productWithTotal;
   }
 }

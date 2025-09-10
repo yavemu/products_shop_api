@@ -23,6 +23,9 @@ export class OrderDetailOrmEntity {
   @Column({ name: 'total_price', type: 'decimal', precision: 10, scale: 2 })
   totalPrice: number;
 
+  @Column({ name: 'tax', type: 'decimal', precision: 5, scale: 2 })
+  tax: number;
+
   @Column({ name: 'order_id', type: 'int' })
   orderId: number;
 

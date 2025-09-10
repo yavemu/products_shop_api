@@ -23,6 +23,10 @@ export class OrderDetail {
   @IsPositive()
   totalPrice: number;
 
+  @IsNumber()
+  @IsPositive()
+  tax: number;
+
   @IsInt()
   @Min(1)
   orderId: number;
