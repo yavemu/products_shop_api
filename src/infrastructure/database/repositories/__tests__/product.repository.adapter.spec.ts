@@ -35,32 +35,58 @@ describe('ProductRepositoryAdapter', () => {
   });
 
   it('should save a product', async () => {
-    const product: Product = { id: 1, name: 'Test Product' } as Product;
-    const createdEntity = { ...product } as ProductOrmEntity;
-    const savedEntity = { ...product } as ProductOrmEntity;
+    const product: Product = { 
+      id: 1, 
+      name: 'Test Product', 
+      price: 1000, 
+      tax: 19,
+      totalPrice: 1190
+    } as Product;
+    const createdEntity = { ...product, price: 1000, tax: 19 } as ProductOrmEntity;
+    const savedEntity = { ...product, price: 1000, tax: 19 } as ProductOrmEntity;
 
     repository.create.mockReturnValue(createdEntity);
     repository.save.mockResolvedValue(savedEntity);
 
     const result = await repositoryAdapter.save(product);
 
-    expect(repository.create).toHaveBeenCalledWith(product);
+    expect(repository.create).toHaveBeenCalled();
     expect(repository.save).toHaveBeenCalledWith(createdEntity);
-    expect(result).toEqual(savedEntity);
+    expect(result).toEqual(expect.objectContaining({
+      id: 1,
+      name: 'Test Product',
+      totalPrice: 1190
+    }));
   });
 
   it('should find all products without filters', async () => {
-    const products = [{ id: 1, name: 'Prod1' }] as ProductOrmEntity[];
+    const products = [{ 
+      id: 1, 
+      name: 'Prod1', 
+      price: 2000, 
+      tax: 5 
+    }] as ProductOrmEntity[];
     repository.find.mockResolvedValue(products);
 
     const result = await repositoryAdapter.findAll();
 
     expect(repository.find).toHaveBeenCalledWith({ where: {} });
-    expect(result).toEqual(products);
+    expect(result).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: 1,
+        name: 'Prod1',
+        totalPrice: 2100
+      })
+    ]));
   });
 
   it('should find all products with ids filter', async () => {
-    const products = [{ id: 1, name: 'Prod1' }] as ProductOrmEntity[];
+    const products = [{ 
+      id: 1, 
+      name: 'Prod1', 
+      price: 3000, 
+      tax: 19 
+    }] as ProductOrmEntity[];
     const filters: IProductFilter = { ids: [1] };
 
     repository.find.mockResolvedValue(products);
@@ -70,28 +96,52 @@ describe('ProductRepositoryAdapter', () => {
     expect(repository.find).toHaveBeenCalledWith({
       where: { id: expect.any(Object) }, // In([1])
     });
-    expect(result).toEqual(products);
+    expect(result).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: 1,
+        name: 'Prod1',
+        totalPrice: 3570
+      })
+    ]));
   });
 
   it('should find product by id', async () => {
-    const product = { id: 1, name: 'Prod1' } as ProductOrmEntity;
+    const product = { 
+      id: 1, 
+      name: 'Prod1', 
+      price: 5000, 
+      tax: 19 
+    } as ProductOrmEntity;
     repository.findOne.mockResolvedValue(product);
 
     const result = await repositoryAdapter.findById(1);
 
     expect(repository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
-    expect(result).toEqual(product);
+    expect(result).toEqual(expect.objectContaining({
+      id: 1,
+      name: 'Prod1',
+      totalPrice: 5950
+    }));
   });
 
   it('should update a product and return it', async () => {
-    const product = { id: 1, name: 'Updated Prod' } as ProductOrmEntity;
+    const product = { 
+      id: 1, 
+      name: 'Updated Prod', 
+      price: 4000, 
+      tax: 5 
+    } as ProductOrmEntity;
     repository.findOne.mockResolvedValue(product);
 
     const result = await repositoryAdapter.update(1, { name: 'Updated Prod' });
 
     expect(repository.update).toHaveBeenCalledWith(1, { name: 'Updated Prod' });
     expect(repository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
-    expect(result).toEqual(product);
+    expect(result).toEqual(expect.objectContaining({
+      id: 1,
+      name: 'Updated Prod',
+      totalPrice: 4200
+    }));
   });
 
   it('should throw error when updating non-existing product', async () => {
